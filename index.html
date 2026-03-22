@@ -157,16 +157,10 @@
     margin-bottom: 28px;
   }
   .footer-bottom {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 24px;
-    flex-wrap: wrap;
-  }
-  .footer-author {
-    display: flex;
-    align-items: center;
-    gap: 16px;
   }
   .footer-avatar {
     width: 56px;
@@ -175,10 +169,8 @@
     background: var(--bg-tertiary);
     border: 2px solid var(--border-default);
     object-fit: cover;
-    flex-shrink: 0;
   }
   .footer-author-info {
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -190,7 +182,6 @@
     font-size: 15px;
     color: var(--text-primary);
     margin-bottom: 4px;
-    text-align: center;
   }
   .footer-author-bio {
     font-size: 14px;
@@ -1211,10 +1202,8 @@
     .footer-accent { margin: -32px -16px 24px; }
     .footer-actions { flex-direction: column; }
     .footer-btn { justify-content: center; }
-    .footer-bottom { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
-    .footer-author { flex-direction: column; text-align: center; }
-    .footer-author-info { display: flex; flex-direction: column; align-items: center; }
-    .footer-author-bio { text-align: center; max-width: none; }
+    .footer-bottom { grid-template-columns: 1fr; justify-items: center; gap: 20px; }
+    .footer-author-bio { max-width: none; }
     .mobile-nav { display: flex; }
     .toast { bottom: 80px; }
   }
@@ -2698,12 +2687,10 @@
     <div class="footer-divider"></div>
     
     <div class="footer-bottom">
-      <div class="footer-author">
-        <img src="avatar.jpg" alt="TRIP" class="footer-avatar">
-        <div class="footer-author-info">
-          <span class="footer-author-name">TRIP</span>
-          <p class="footer-author-bio">Designer & developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don't make the mistakes above.</p>
-        </div>
+      <img src="avatar.jpg" alt="TRIP" class="footer-avatar">
+      <div class="footer-author-info">
+        <span class="footer-author-name">TRIP</span>
+        <p class="footer-author-bio">Designer & developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don't make the mistakes above.</p>
       </div>
       <a href="https://twitter.com/WLXAJ" class="footer-follow" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
