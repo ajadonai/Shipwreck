@@ -97,148 +97,39 @@
   }
   .item-link.copied { color: var(--green); }
   
-  /* Author card */
-  .author-card {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: 24px;
-    padding: 32px;
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-lg);
-    margin-top: 48px;
-    overflow: hidden;
-    transition: all 0.4s var(--ease-out);
+  /* Site Footer */
+  .site-footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-default);
+    padding: 48px 24px;
+    margin-top: 64px;
   }
-  .author-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
+  .footer-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+  }
+  .footer-accent {
+    height: 3px;
     background: linear-gradient(90deg, var(--red), var(--amber), var(--blue), var(--green), var(--purple));
-    opacity: 0.8;
+    opacity: 0.7;
+    margin: -48px -24px 32px;
   }
-  .author-card:hover {
-    border-color: var(--border-strong);
-    box-shadow: 0 16px 48px -12px hsla(var(--shadow-color) / 0.2);
-    transform: translateY(-2px);
-  }
-  .author-avatar-wrapper {
-    position: relative;
-    width: 88px;
-    height: 88px;
-    flex-shrink: 0;
-  }
-  .author-avatar {
-    width: 88px;
-    height: 88px;
-    border-radius: 16px;
-    object-fit: cover;
-    border: 3px solid var(--border-default);
-    box-shadow: 0 8px 24px -8px hsla(var(--shadow-color) / 0.25);
-    transition: all 0.3s var(--ease-out);
-  }
-  .author-card:hover .author-avatar {
-    border-color: var(--border-strong);
-    transform: scale(1.02);
-  }
-  .author-status {
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 22px;
-    height: 22px;
-    background: var(--green);
-    border: 3px solid var(--bg-secondary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .author-status svg {
-    width: 10px;
-    height: 10px;
-    color: #000;
-  }
-  .author-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-  }
-  .author-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .author-name {
+  .footer-quote {
     font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-  }
-  .author-handle {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--text-tertiary);
-  }
-  .author-bio {
-    font-size: 15px;
+    font-size: 18px;
+    font-style: italic;
     color: var(--text-secondary);
-    line-height: 1.6;
-    max-width: 400px;
+    text-align: center;
+    margin-bottom: 28px;
   }
-  .author-links {
+  .footer-actions {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-  }
-  .author-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-inverse);
-    text-decoration: none;
-    padding: 10px 18px;
-    background: var(--text-primary);
-    border: none;
-    border-radius: 100px;
-    transition: all 0.2s var(--ease-out);
-  }
-  .author-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px -6px hsla(var(--shadow-color) / 0.35);
-  }
-  .author-link svg { width: 15px; height: 15px; }
-  .author-link.secondary {
-    background: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--border-default);
-  }
-  .author-link.secondary:hover {
-    background: var(--bg-elevated);
-    border-color: var(--border-strong);
-  }
-  
-  /* CTA section - simpler, less prominent than author card */
-  .cta-section {
-    display: flex;
-    gap: 16px;
-    margin-top: 32px;
+    gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
+    margin-bottom: 36px;
   }
-  .cta-btn {
+  .footer-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -248,18 +139,87 @@
     padding: 12px 20px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-default);
-    background: transparent;
+    background: var(--bg-tertiary);
     color: var(--text-secondary);
     cursor: pointer;
     text-decoration: none;
     transition: all 0.2s var(--ease-out);
   }
-  .cta-btn svg { width: 14px; height: 14px; }
-  .cta-btn:hover {
-    color: var(--text-primary);
+  .footer-btn:hover {
+    background: var(--bg-primary);
     border-color: var(--border-strong);
-    background: var(--bg-secondary);
+    color: var(--text-primary);
   }
+  .footer-btn svg { width: 15px; height: 15px; }
+  .footer-divider {
+    height: 1px;
+    background: var(--border-default);
+    margin-bottom: 28px;
+  }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .footer-author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .footer-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-default);
+    object-fit: cover;
+  }
+  .footer-author-info {
+    flex: 1;
+  }
+  .footer-author-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .footer-author-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-primary);
+  }
+  .footer-author-handle {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  .footer-author-bio {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    max-width: 400px;
+  }
+  .footer-follow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 100px;
+    background: var(--text-primary);
+    color: var(--text-inverse);
+    text-decoration: none;
+    transition: all 0.2s var(--ease-out);
+  }
+  .footer-follow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -6px hsla(var(--shadow-color) / 0.4);
+  }
+  .footer-follow svg { width: 14px; height: 14px; }
   
   /* Mobile bottom nav */
   .mobile-nav {
@@ -1249,35 +1209,17 @@
     .item-header .severity { display: none; }
     .item-details-inner { padding: 0 16px 16px 52px; }
     .back-to-top { bottom: 80px; right: 20px; width: 44px; height: 44px; }
-    .author-card { 
-      grid-template-columns: 1fr; 
-      text-align: center; 
-      gap: 20px;
-      padding: 28px 24px;
-    }
-    .author-avatar-wrapper { justify-self: center; }
-    .author-avatar { width: 80px; height: 80px; }
-    .author-header { justify-content: center; }
-    .author-bio { max-width: none; }
-    .author-links { justify-content: center; }
-    .cta-section { flex-direction: column; align-items: stretch; }
-    .cta-btn { justify-content: center; }
+    .site-footer { padding: 32px 16px; }
+    .footer-accent { margin: -32px -16px 24px; }
+    .footer-actions { flex-direction: column; }
+    .footer-btn { justify-content: center; }
+    .footer-bottom { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+    .footer-author { flex-direction: column; text-align: center; }
+    .footer-author-info { display: flex; flex-direction: column; align-items: center; }
+    .footer-author-top { justify-content: center; }
+    .footer-author-bio { text-align: center; max-width: none; }
     .mobile-nav { display: flex; }
     .toast { bottom: 80px; }
-  }
-  
-  /* Desktop - ensure left alignment on author card */
-  @media (min-width: 681px) {
-    .author-info {
-      text-align: left;
-      align-items: flex-start;
-    }
-    .author-header {
-      justify-content: flex-start;
-    }
-    .author-links {
-      justify-content: flex-start;
-    }
   }
 
   /* ═══════════ PRINT ═══════════ */
@@ -2733,48 +2675,50 @@
     </div>
   </section>
 
-  <footer>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-accent"></div>
+  <div class="footer-inner">
+    
     <p class="footer-quote">"Ship fast, but not recklessly."</p>
     
-    <div class="cta-section">
-      <button class="cta-btn" onclick="copyPageLink()">
+    <div class="footer-actions">
+      <button class="footer-btn" onclick="copyPageLink()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
         Copy link
       </button>
-      <a href="https://twitter.com/intent/tweet?text=37%20Mistakes%20Vibe%20Coders%20Ship%20to%20Production%20%E2%80%94%20the%20code%20review%20your%20AI%20never%20gave%20you&url=https%3A%2F%2Fshipwrecksbyai.vercel.app" class="cta-btn" target="_blank" rel="noopener">
+      <a href="https://twitter.com/intent/tweet?text=37%20Mistakes%20Vibe%20Coders%20Ship%20to%20Production%20%E2%80%94%20the%20code%20review%20your%20AI%20never%20gave%20you&url=https%3A%2F%2Fshipwrecksbyai.vercel.app" class="footer-btn" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         Post on X
       </a>
-      <button class="cta-btn" onclick="openDownloadModal()">
+      <button class="footer-btn" onclick="openDownloadModal()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         Download checklist
       </button>
     </div>
-
-    <div class="author-card">
-      <div class="author-avatar-wrapper">
-        <img src="avatar.jpg" alt="WLXAJ" class="author-avatar">
-        <div class="author-status">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    
+    <div class="footer-divider"></div>
+    
+    <div class="footer-bottom">
+      <div class="footer-author">
+        <img src="avatar.jpg" alt="WLXAJ" class="footer-avatar">
+        <div class="footer-author-info">
+          <div class="footer-author-top">
+            <span class="footer-author-name">WLXAJ</span>
+            <span class="footer-author-handle">@WLXAJ</span>
+          </div>
+          <p class="footer-author-bio">Designer & developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don't make the mistakes above.</p>
         </div>
       </div>
-      <div class="author-info">
-        <div class="author-header">
-          <span class="author-name">WLXAJ</span>
-          <span class="author-handle">@WLXAJ</span>
-        </div>
-        <p class="author-bio">Designer & developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don't make the mistakes above.</p>
-        <div class="author-links">
-          <a href="https://twitter.com/WLXAJ" target="_blank" rel="noopener noreferrer" class="author-link">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            Follow
-          </a>
-        </div>
-      </div>
+      <a href="https://twitter.com/WLXAJ" class="footer-follow" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Follow
+      </a>
     </div>
-  </footer>
-
-</div>
+    
+  </div>
+</footer>
 
 <button class="back-to-top" id="backToTop" aria-label="Back to top">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
