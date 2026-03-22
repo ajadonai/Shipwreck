@@ -178,22 +178,14 @@
   }
   .footer-author-info {
     flex: 1;
-  }
-  .footer-author-top {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 4px;
+    text-align: center;
   }
   .footer-author-name {
     font-weight: 600;
     font-size: 15px;
     color: var(--text-primary);
-  }
-  .footer-author-handle {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--text-tertiary);
+    margin-bottom: 4px;
+    display: block;
   }
   .footer-author-bio {
     font-size: 14px;
@@ -1216,7 +1208,6 @@
     .footer-bottom { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
     .footer-author { flex-direction: column; text-align: center; }
     .footer-author-info { display: flex; flex-direction: column; align-items: center; }
-    .footer-author-top { justify-content: center; }
     .footer-author-bio { text-align: center; max-width: none; }
     .mobile-nav { display: flex; }
     .toast { bottom: 80px; }
@@ -2702,12 +2693,9 @@
     
     <div class="footer-bottom">
       <div class="footer-author">
-        <img src="avatar.jpg" alt="WLXAJ" class="footer-avatar">
+        <img src="avatar.jpg" alt="TRIP" class="footer-avatar">
         <div class="footer-author-info">
-          <div class="footer-author-top">
-            <span class="footer-author-name">WLXAJ</span>
-            <span class="footer-author-handle">@WLXAJ</span>
-          </div>
+          <span class="footer-author-name">TRIP</span>
           <p class="footer-author-bio">Designer & developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don't make the mistakes above.</p>
         </div>
       </div>
