@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-text-size="medium">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Shipwrecked</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',-apple-system,sans-serif;--font-mono:'DM Mono','SF Mono',monospace;--text-scale:1;--nav-h:60px;--radius-sm:6px;--ease-out:cubic-bezier(.16,1,.3,1)}
+html[data-text-size="small"]{--text-scale:.8}html[data-text-size="medium"]{--text-scale:1}html[data-text-size="large"]{--text-scale:1.25}
+[data-theme="dark"]{--bg-primary:#121212;--bg-secondary:#1a1a1a;--bg-tertiary:#222;--bg-elevated:#2a2a2a;--border-default:rgba(255,255,255,.1);--border-strong:rgba(255,255,255,.15);--text-primary:#f5f5f5;--text-secondary:#a8a8a8;--text-tertiary:#6b6b6b;--text-inverse:#121212;--amber:#ffb347;--amber-soft:rgba(255,179,71,.1);--amber-border:rgba(255,179,71,.25);--red:#ff6b6b;--red-soft:rgba(255,107,107,.1);--shadow-color:0deg 0% 0%}
+[data-theme="light"]{--bg-primary:#fafafa;--bg-secondary:#fff;--bg-tertiary:#f0f0f0;--bg-elevated:#fff;--border-default:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.12);--text-primary:#1a1a1a;--text-secondary:#666;--text-tertiary:#999;--text-inverse:#fff;--amber:#ef8c00;--amber-soft:rgba(239,140,0,.08);--amber-border:rgba(239,140,0,.2);--red:#e53935;--red-soft:rgba(229,57,53,.08);--shadow-color:220deg 10% 50%}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);font-size:calc(15px * var(--text-scale));line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;transition:background .4s var(--ease-out),color .4s var(--ease-out)}
+nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:var(--bg-secondary);border-bottom:1px solid var(--border-default);display:flex;align-items:center;justify-content:space-between;padding:0 24px;transition:background .4s var(--ease-out)}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit}
+.nav-logo svg{width:28px;height:28px}
+.nav-right{display:flex;align-items:center;gap:6px}
+.nav-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border-default);background:var(--bg-tertiary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;color:var(--text-secondary)}
+.nav-btn:hover{background:var(--bg-elevated);border-color:var(--border-strong);color:var(--text-primary)}
+.nav-btn svg{width:18px;height:18px}
+.theme-toggle svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.theme-toggle:hover svg{transform:rotate(15deg)}
+[data-theme="dark"] .icon-sun{display:block}[data-theme="dark"] .icon-moon{display:none}
+[data-theme="light"] .icon-sun{display:none}[data-theme="light"] .icon-moon{display:block}
+
+.content{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+.inner{max-width:480px}
+.code{font-family:var(--font-display);font-size:clamp(80px,20vw,160px);font-weight:300;line-height:.9;letter-spacing:-.04em;color:var(--text-primary);opacity:.15;margin-bottom:-20px}
+.title{font-family:var(--font-display);font-size:clamp(24px,5vw,36px);font-weight:400;line-height:1.2;letter-spacing:-.02em;margin-bottom:12px}
+.title em{font-style:italic;color:var(--amber);font-weight:500}
+.desc{font-size:calc(15px * var(--text-scale));color:var(--text-secondary);line-height:1.7;margin-bottom:32px;max-width:380px;margin-left:auto;margin-right:auto}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:100px;font-family:var(--font-body);font-size:13px;font-weight:600;text-decoration:none;transition:all .2s var(--ease-out);cursor:pointer;border:none}
+.btn-primary{background:var(--text-primary);color:var(--text-inverse)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px -6px hsla(var(--shadow-color)/.4)}
+.btn-ghost{background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border-default)}
+.btn-ghost:hover{background:var(--bg-elevated);border-color:var(--border-strong);color:var(--text-primary)}
+@media(max-width:600px){nav{padding:0 16px}.actions{flex-direction:column}.btn{justify-content:center}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="12" fill="#1a1a1a"/><path d="M32 12 L56 52 L8 52 Z" fill="none" stroke="#ffb347" stroke-width="3" stroke-linejoin="round"/><text x="32" y="44" fill="#ffb347" font-family="ui-monospace,monospace" font-size="14" font-weight="600" text-anchor="middle">&lt;/&gt;</text></svg>
+  </a>
+  <div class="nav-right">
+    <button class="nav-btn theme-toggle" onclick="toggleTheme()">
+      <svg class="icon-sun" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>
+      <svg class="icon-moon" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+    </button>
+  </div>
+</nav>
+<div class="content">
+  <div class="inner">
+    <div class="code">404</div>
+    <h1 class="title">This page <em>sank</em></h1>
+    <p class="desc">Looks like this page hit an iceberg and went down. Not even a vibe coder could ship something here.</p>
+    <div class="actions">
+      <a href="/" class="btn btn-primary">Back to shore →</a>
+      <a href="/mistakes.html" class="btn btn-ghost">Browse 37 mistakes</a>
+    </div>
+  </div>
+</div>
+<script>
+function toggleTheme(){var t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('sw-theme',t)}catch(e){}}
+(function(){try{var t=localStorage.getItem('sw-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}})();
+</script>
+</body>
+</html>
