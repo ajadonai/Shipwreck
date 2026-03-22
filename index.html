@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>37 Mistakes Vibe Coders Ship to Production</title>
 
 <!-- Favicons -->
@@ -338,11 +338,107 @@
   }
   .toast svg { width: 16px; height: 16px; color: var(--green); }
 
+  /* Download Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 24px 48px -12px hsla(var(--shadow-color) / 0.4);
+  }
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .modal-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+  .modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .modal-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out);
+    text-decoration: none;
+    color: inherit;
+  }
+  .modal-option:hover {
+    background: var(--bg-elevated);
+    border-color: var(--border-strong);
+  }
+  .modal-option-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+  }
+  .modal-option-icon svg { width: 18px; height: 18px; }
+  .modal-option-text { flex: 1; }
+  .modal-option-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+  .modal-option-subtitle {
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  .modal-close {
+    margin-top: 16px;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out);
+  }
+  .modal-close:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
   :root {
     /* Typography */
     --font-display: 'Fraunces', Georgia, serif;
     --font-body: 'DM Sans', -apple-system, sans-serif;
     --font-mono: 'DM Mono', 'SF Mono', monospace;
+    --text-scale: 1;
     
     /* Spacing */
     --nav-h: 60px;
@@ -355,6 +451,11 @@
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
+  
+  /* Text size variants */
+  [data-text-size="small"] { --text-scale: 0.875; }
+  [data-text-size="medium"] { --text-scale: 1; }
+  [data-text-size="large"] { --text-scale: 1.125; }
 
   /* ═══════════ DARK THEME ═══════════ */
   [data-theme="dark"] {
@@ -445,7 +546,7 @@
     background: var(--bg-primary);
     color: var(--text-primary);
     font-family: var(--font-body);
-    font-size: 15px;
+    font-size: calc(15px * var(--text-scale));
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -542,6 +643,70 @@
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+
+  /* Text Size Toggle */
+  .text-size-toggle {
+    position: relative;
+  }
+  .text-size-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+    background: var(--bg-tertiary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s var(--ease-out);
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .text-size-btn:hover {
+    background: var(--bg-elevated);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+  .text-size-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 100px;
+    box-shadow: 0 8px 24px -8px hsla(var(--shadow-color) / 0.3);
+    z-index: 200;
+  }
+  .text-size-dropdown.open { display: flex; }
+  .text-size-option {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: left;
+    transition: all 0.15s var(--ease-out);
+  }
+  .text-size-option:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  .text-size-option.active {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-weight: 600;
   }
 
   /* Theme Toggle */
@@ -1138,6 +1303,14 @@
     </div>
   </div>
   <div class="nav-right">
+    <div class="text-size-toggle">
+      <button class="text-size-btn" id="textSizeBtn" aria-label="Text size">Aa</button>
+      <div class="text-size-dropdown" id="textSizeDropdown">
+        <button class="text-size-option" data-size="small">Small</button>
+        <button class="text-size-option active" data-size="medium">Medium</button>
+        <button class="text-size-option" data-size="large">Large</button>
+      </div>
+    </div>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="5"></circle>
@@ -2571,6 +2744,10 @@
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         Post on X
       </a>
+      <button class="cta-btn" onclick="openDownloadModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Download checklist
+      </button>
     </div>
 
     <div class="author-card">
@@ -2630,6 +2807,43 @@
 <div class="toast" id="toast">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
   <span id="toastMessage">Copied!</span>
+</div>
+
+<div class="modal-overlay" id="downloadModal">
+  <div class="modal">
+    <h3 class="modal-title">Download Checklist</h3>
+    <p class="modal-desc">Get a printable todo list to use while vibe coding.</p>
+    <div class="modal-options">
+      <button class="modal-option" onclick="downloadChecklist('md')">
+        <div class="modal-option-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        </div>
+        <div class="modal-option-text">
+          <div class="modal-option-title">Markdown (.md)</div>
+          <div class="modal-option-subtitle">For Notion, Obsidian, GitHub</div>
+        </div>
+      </button>
+      <button class="modal-option" onclick="downloadChecklist('txt')">
+        <div class="modal-option-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        </div>
+        <div class="modal-option-text">
+          <div class="modal-option-title">Plain Text (.txt)</div>
+          <div class="modal-option-subtitle">Universal, works anywhere</div>
+        </div>
+      </button>
+      <button class="modal-option" onclick="downloadChecklist('pdf')">
+        <div class="modal-option-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15h6"></path><path d="M9 11h6"></path></svg>
+        </div>
+        <div class="modal-option-text">
+          <div class="modal-option-title">PDF</div>
+          <div class="modal-option-subtitle">Print-ready document</div>
+        </div>
+      </button>
+    </div>
+    <button class="modal-close" onclick="closeDownloadModal()">Cancel</button>
+  </div>
 </div>
 
 <script>
@@ -2779,8 +2993,187 @@
       document.querySelectorAll('.item.expanded').forEach(item => {
         item.classList.remove('expanded');
       });
+      closeDownloadModal();
+      document.getElementById('textSizeDropdown').classList.remove('open');
     }
   });
+
+  // ═══════════ TEXT SIZE TOGGLE ═══════════
+  const textSizeBtn = document.getElementById('textSizeBtn');
+  const textSizeDropdown = document.getElementById('textSizeDropdown');
+  const textSizeOptions = document.querySelectorAll('.text-size-option');
+
+  // Load saved text size
+  const savedTextSize = localStorage.getItem('textSize') || 'medium';
+  document.documentElement.setAttribute('data-text-size', savedTextSize);
+  textSizeOptions.forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.size === savedTextSize);
+  });
+
+  textSizeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    textSizeDropdown.classList.toggle('open');
+  });
+
+  textSizeOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      const size = option.dataset.size;
+      document.documentElement.setAttribute('data-text-size', size);
+      localStorage.setItem('textSize', size);
+      textSizeOptions.forEach(opt => opt.classList.remove('active'));
+      option.classList.add('active');
+      textSizeDropdown.classList.remove('open');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.text-size-toggle')) {
+      textSizeDropdown.classList.remove('open');
+    }
+  });
+
+  // ═══════════ DOWNLOAD MODAL ═══════════
+  function openDownloadModal() {
+    document.getElementById('downloadModal').classList.add('open');
+  }
+
+  function closeDownloadModal() {
+    document.getElementById('downloadModal').classList.remove('open');
+  }
+
+  document.getElementById('downloadModal').addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+      closeDownloadModal();
+    }
+  });
+
+  // ═══════════ CHECKLIST GENERATION ═══════════
+  function getChecklistData() {
+    const sections = [];
+    document.querySelectorAll('.section').forEach(section => {
+      const title = section.querySelector('.section-title').textContent.trim();
+      const items = [];
+      section.querySelectorAll('.item').forEach(item => {
+        const num = item.querySelector('.item-number').textContent.trim();
+        const name = item.querySelector('.item-name').textContent.trim();
+        const desc = item.querySelector('.item-desc').textContent.trim();
+        items.push({ num, name, desc });
+      });
+      sections.push({ title, items });
+    });
+    return sections;
+  }
+
+  function generateMarkdown(sections) {
+    let md = '# 37 Mistakes Vibe Coders Ship to Production\n\n';
+    md += 'The code review your AI never gave you.\n\n---\n\n';
+    sections.forEach(section => {
+      md += `## ${section.title}\n\n`;
+      section.items.forEach(item => {
+        md += `- [ ] **${item.num}. ${item.name}** — ${item.desc}\n`;
+      });
+      md += '\n';
+    });
+    md += '---\n\n*Source: shipwrecksbyai.vercel.app*\n';
+    return md;
+  }
+
+  function generatePlainText(sections) {
+    let txt = '37 MISTAKES VIBE CODERS SHIP TO PRODUCTION\n';
+    txt += '==========================================\n\n';
+    txt += 'The code review your AI never gave you.\n\n';
+    sections.forEach(section => {
+      txt += `\n${section.title.toUpperCase()}\n`;
+      txt += '-'.repeat(section.title.length) + '\n\n';
+      section.items.forEach(item => {
+        txt += `[ ] ${item.num}. ${item.name}\n    ${item.desc}\n\n`;
+      });
+    });
+    txt += '\n---\nSource: shipwrecksbyai.vercel.app\n';
+    return txt;
+  }
+
+  function generatePDFContent(sections) {
+    // Generate HTML for PDF
+    let html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>37 Mistakes Vibe Coders Ship to Production</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 700px; margin: 0 auto; padding: 40px 20px; color: #1a1a1a; }
+  h1 { font-size: 24px; margin-bottom: 8px; }
+  .subtitle { color: #666; margin-bottom: 32px; }
+  h2 { font-size: 16px; margin-top: 32px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+  .item { display: flex; gap: 12px; margin-bottom: 12px; page-break-inside: avoid; }
+  .checkbox { width: 16px; height: 16px; border: 1.5px solid #999; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+  .item-content { flex: 1; }
+  .item-title { font-weight: 600; font-size: 14px; }
+  .item-desc { color: #666; font-size: 13px; margin-top: 2px; }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #eee; color: #999; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>37 Mistakes Vibe Coders Ship to Production</h1>
+<p class="subtitle">The code review your AI never gave you.</p>
+`;
+    sections.forEach(section => {
+      html += `<h2>${section.title}</h2>\n`;
+      section.items.forEach(item => {
+        html += `<div class="item">
+  <div class="checkbox"></div>
+  <div class="item-content">
+    <div class="item-title">${item.num}. ${item.name}</div>
+    <div class="item-desc">${item.desc}</div>
+  </div>
+</div>\n`;
+      });
+    });
+    html += `<div class="footer">Source: shipwrecksbyai.vercel.app</div>
+</body>
+</html>`;
+    return html;
+  }
+
+  function downloadChecklist(format) {
+    const sections = getChecklistData();
+    let content, filename, type;
+
+    if (format === 'md') {
+      content = generateMarkdown(sections);
+      filename = 'vibe-coding-checklist.md';
+      type = 'text/markdown';
+    } else if (format === 'txt') {
+      content = generatePlainText(sections);
+      filename = 'vibe-coding-checklist.txt';
+      type = 'text/plain';
+    } else if (format === 'pdf') {
+      // Open print dialog with styled content
+      const pdfContent = generatePDFContent(sections);
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(pdfContent);
+      printWindow.document.close();
+      printWindow.onload = function() {
+        printWindow.print();
+      };
+      closeDownloadModal();
+      showToast('Print dialog opened!');
+      return;
+    }
+
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    closeDownloadModal();
+    showToast(`Downloaded ${filename}`);
+  }
 </script>
 
 </body>
