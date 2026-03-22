@@ -1,3362 +1,1630 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-text-size="medium">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>37 Mistakes Vibe Coders Ship to Production</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Shipwrecks — The Production Checklist Your AI Forgot</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
+  <meta name="description" content="37 critical mistakes vibe coders ship to production. Audit your codebase, score yourself, learn what to fix.">
+  <meta property="og:title" content="Shipwrecks — The Production Checklist Your AI Forgot">
+  <meta property="og:description" content="37 mistakes. Quiz your codebase. Fix what's broken.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shipwrecksbyai.vercel.app/">
+  <meta property="og:image" content="https://shipwrecksbyai.vercel.app/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@WLXAJ">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Design Tokens
+   Shared across all pages & templates
+   ═══════════════════════════════════════ */
 
-<!-- Favicons -->
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
+:root {
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'DM Mono', 'SF Mono', monospace;
+  --text-scale: 1;
 
-<meta name="description" content="The production checklist your AI assistant forgot to mention. 37 critical mistakes to avoid before shipping.">
+  /* Spacing */
+  --nav-h: 60px;
+  --container-max: 720px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
 
-<!-- Open Graph -->
-<meta property="og:title" content="37 Mistakes Vibe Coders Ship to Production">
-<meta property="og:description" content="The code review your Cursor never gave you. Security holes, infra failures, data risks — everything your AI forgot to mention.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://shipwrecksbyai.vercel.app/">
-<meta property="og:image" content="https://shipwrecksbyai.vercel.app/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="37 Mistakes Vibe Coders Ship to Production — Security, Infra, Data, Code, UX">
-<meta property="og:site_name" content="Shipwrecks">
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@WLXAJ">
-<meta name="twitter:creator" content="@WLXAJ">
-<meta name="twitter:title" content="37 Mistakes Vibe Coders Ship to Production">
-<meta name="twitter:description" content="The code review your Cursor never gave you. Security holes, infra failures, data risks.">
-<meta name="twitter:image" content="https://shipwrecksbyai.vercel.app/og-image.png">
+/* Text size variants */
+html[data-text-size="small"]  { --text-scale: 0.8; }
+html[data-text-size="medium"] { --text-scale: 1; }
+html[data-text-size="large"]  { --text-scale: 1.25; }
 
-<!-- Additional SEO -->
-<meta name="author" content="WLXAJ">
-<meta name="keywords" content="vibe coding, production mistakes, security checklist, developer guide, AI coding, cursor, copilot">
-<link rel="canonical" href="https://shipwrecksbyai.vercel.app/">
+/* ═══ DARK THEME ═══ */
+[data-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #222222;
+  --bg-elevated: #2a2a2a;
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.15);
 
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  /* Severity badges */
-  .severity {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 4px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
-  }
-  .severity.critical {
-    background: var(--red-soft);
-    color: var(--red);
-    border: 1px solid var(--red-border);
-  }
-  .severity.high {
-    background: var(--amber-soft);
-    color: var(--amber);
-    border: 1px solid var(--amber-border);
-  }
-  .severity.medium {
-    background: var(--blue-soft);
-    color: var(--blue);
-    border: 1px solid var(--blue-border);
-  }
-  
-  /* Copy link button */
-  .item-link {
-    width: 28px;
-    height: 28px;
-    border-radius: var(--radius-sm);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.2s var(--ease-out);
-    color: var(--text-tertiary);
-    flex-shrink: 0;
-  }
-  .item-link svg { width: 14px; height: 14px; }
-  .item-header:hover .item-link { opacity: 1; }
-  .item-link:hover { 
-    background: var(--bg-tertiary); 
-    color: var(--text-primary);
-  }
-  .item-link.copied { color: var(--green); }
-  
-  /* Site Footer */
-  .site-footer {
-    background: var(--bg-secondary);
-    border-top: 1px solid var(--border-default);
-    padding: 48px 24px;
-    margin-top: 64px;
-  }
-  .footer-inner {
-    max-width: var(--container-max);
-    margin: 0 auto;
-  }
-  .footer-accent {
-    height: 3px;
-    background: linear-gradient(90deg, var(--red), var(--amber), var(--blue), var(--green), var(--purple));
-    opacity: 0.7;
-    margin: -48px -24px 32px;
-  }
-  .footer-quote {
-    font-family: var(--font-display);
-    font-size: 18px;
-    font-style: italic;
-    color: var(--text-secondary);
-    text-align: center;
-    margin-bottom: 28px;
-  }
-  .footer-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 36px;
-  }
-  .footer-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 12px 20px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-default);
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s var(--ease-out);
-  }
-  .footer-btn:hover {
-    background: var(--bg-primary);
-    border-color: var(--border-strong);
-    color: var(--text-primary);
-  }
-  .footer-btn svg { width: 15px; height: 15px; }
-  .footer-divider {
-    height: 1px;
-    background: var(--border-default);
-    margin-bottom: 28px;
-  }
+  --text-primary: #f5f5f5;
+  --text-secondary: #a8a8a8;
+  --text-tertiary: #6b6b6b;
+  --text-inverse: #121212;
+
+  --red: #ff6b6b;
+  --red-soft: rgba(255, 107, 107, 0.1);
+  --red-border: rgba(255, 107, 107, 0.25);
+
+  --amber: #ffb347;
+  --amber-soft: rgba(255, 179, 71, 0.1);
+  --amber-border: rgba(255, 179, 71, 0.25);
+
+  --blue: #5cc8ff;
+  --blue-soft: rgba(92, 200, 255, 0.1);
+  --blue-border: rgba(92, 200, 255, 0.25);
+
+  --green: #69db7c;
+  --green-soft: rgba(105, 219, 124, 0.1);
+  --green-border: rgba(105, 219, 124, 0.25);
+
+  --purple: #b197fc;
+  --purple-soft: rgba(177, 151, 252, 0.1);
+  --purple-border: rgba(177, 151, 252, 0.25);
+
+  --overlay: rgba(0, 0, 0, 0.6);
+  --shadow-color: 0deg 0% 0%;
+}
+
+/* ═══ LIGHT THEME ═══ */
+[data-theme="light"] {
+  --bg-primary: #fafafa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f0f0;
+  --bg-elevated: #ffffff;
+
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-default: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.12);
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-inverse: #ffffff;
+
+  --red: #e53935;
+  --red-soft: rgba(229, 57, 53, 0.08);
+  --red-border: rgba(229, 57, 53, 0.2);
+
+  --amber: #ef8c00;
+  --amber-soft: rgba(239, 140, 0, 0.08);
+  --amber-border: rgba(239, 140, 0, 0.2);
+
+  --blue: #0088cc;
+  --blue-soft: rgba(0, 136, 204, 0.08);
+  --blue-border: rgba(0, 136, 204, 0.2);
+
+  --green: #2e9e45;
+  --green-soft: rgba(46, 158, 69, 0.08);
+  --green-border: rgba(46, 158, 69, 0.2);
+
+  --purple: #7c4dff;
+  --purple-soft: rgba(124, 77, 255, 0.08);
+  --purple-border: rgba(124, 77, 255, 0.2);
+
+  --overlay: rgba(255, 255, 255, 0.85);
+  --shadow-color: 220deg 10% 50%;
+}
+
+/* ═══ RESET & BASE ═══ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 24px); }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: calc(15px * var(--text-scale));
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
+}
+
+/* ═══ SHARED UTILITIES ═══ */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Severity / tag badges */
+.badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.badge-red    { background: var(--red-soft);    color: var(--red);    border: 1px solid var(--red-border); }
+.badge-amber  { background: var(--amber-soft);  color: var(--amber);  border: 1px solid var(--amber-border); }
+.badge-blue   { background: var(--blue-soft);   color: var(--blue);   border: 1px solid var(--blue-border); }
+.badge-green  { background: var(--green-soft);  color: var(--green);  border: 1px solid var(--green-border); }
+.badge-purple { background: var(--purple-soft); color: var(--purple); border: 1px solid var(--purple-border); }
+.badge-muted  { background: var(--bg-tertiary); color: var(--text-tertiary); border: 1px solid var(--border-default); }
+
+/* Pill badges (rounded) */
+.pill {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Primary CTA button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s var(--ease-out);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -6px hsla(var(--shadow-color) / 0.4);
+}
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Shared Components
+   Nav, Footer, Search Overlay
+   ═══════════════════════════════════════ */
+
+/* ═══ NAVBAR ═══ */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  transition: background 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-logo-icon { width: 28px; height: 28px; flex-shrink: 0; }
+
+.nav-logo-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-out);
+  color: var(--text-secondary);
+}
+
+.nav-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.nav-btn svg { width: 18px; height: 18px; }
+.nav-btn.text-sz {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Text Size Dropdown */
+.text-size-toggle { position: relative; }
+
+.text-size-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 100px;
+  box-shadow: 0 8px 24px -8px hsla(var(--shadow-color) / 0.3);
+  z-index: 200;
+}
+
+.text-size-dropdown.open { display: flex; }
+
+.ts-opt {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  transition: all 0.15s var(--ease-out);
+}
+
+.ts-opt:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.ts-opt.active {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Theme Toggle */
+.theme-toggle svg { transition: transform 0.3s var(--ease-spring); }
+.theme-toggle:hover svg { transform: rotate(15deg); }
+
+[data-theme="dark"] .icon-sun  { display: block; }
+[data-theme="dark"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun  { display: none; }
+[data-theme="light"] .icon-moon { display: block; }
+
+
+/* ═══ CMD+K SEARCH OVERLAY ═══ */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 500;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: min(20vh, 120px) 24px 24px;
+}
+
+.search-overlay.open { display: flex; }
+
+.search-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 24px 48px -12px hsla(var(--shadow-color) / 0.4);
+  overflow: hidden;
+  animation: modalIn 0.2s var(--ease-out);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.search-input-wrap svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.search-input::placeholder { color: var(--text-tertiary); }
+
+.search-esc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.search-results {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.search-results::-webkit-scrollbar { width: 4px; }
+.search-results::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 2px; }
+
+.search-empty {
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+
+.sr-group {
+  padding: 8px 12px 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+}
+
+.sr-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.1s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sr-item:hover, .sr-item.focused { background: var(--bg-tertiary); }
+
+.sr-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.sr-icon.red    { background: var(--red-soft);    border: 1px solid var(--red-border); }
+.sr-icon.amber  { background: var(--amber-soft);  border: 1px solid var(--amber-border); }
+.sr-icon.blue   { background: var(--blue-soft);   border: 1px solid var(--blue-border); }
+.sr-icon.green  { background: var(--green-soft);  border: 1px solid var(--green-border); }
+.sr-icon.purple { background: var(--purple-soft); border: 1px solid var(--purple-border); }
+.sr-icon.muted  { background: var(--bg-tertiary); border: 1px solid var(--border-default); }
+
+.sr-meta { flex: 1; min-width: 0; }
+
+.sr-title {
+  font-size: calc(13px * var(--text-scale));
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sr-sub {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sr-arrow { color: var(--text-tertiary); font-size: 14px; }
+
+
+/* ═══ FOOTER ═══ */
+.site-footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-default);
+  padding: 48px 24px;
+  margin-top: 64px;
+}
+
+.footer-accent {
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--amber), var(--blue), var(--green), var(--purple));
+  opacity: 0.7;
+  margin: -48px -24px 32px;
+}
+
+.footer-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.footer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s var(--ease-out);
+}
+
+.footer-btn:hover {
+  background: var(--bg-primary);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.footer-btn svg { width: 15px; height: 15px; }
+
+.footer-divider {
+  height: 1px;
+  background: var(--border-default);
+  margin-bottom: 28px;
+}
+
+.footer-bottom {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.footer-avatar-wrap {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.footer-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-default);
+  object-fit: cover;
+}
+
+.footer-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+.footer-author-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.footer-author-name {
+  font-weight: 600;
+  font-size: calc(15px * var(--text-scale));
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.footer-author-bio {
+  font-size: calc(14px * var(--text-scale));
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 400px;
+  text-align: center;
+}
+
+.footer-follow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 100px;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  text-decoration: none;
+  transition: all 0.2s var(--ease-out);
+}
+
+.footer-follow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -6px hsla(var(--shadow-color) / 0.4);
+}
+
+.footer-follow svg { width: 14px; height: 14px; }
+
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 600px) {
+  nav { padding: 0 16px; }
   .footer-bottom {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 24px;
-  }
-  .footer-avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: 12px;
-    background: var(--bg-tertiary);
-    border: 2px solid var(--border-default);
-    object-fit: cover;
-  }
-  .footer-author-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    grid-template-columns: 1fr;
+    justify-items: center;
     text-align: center;
-  }
-  .footer-author-name {
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-  }
-  .footer-author-bio {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    max-width: 400px;
-    text-align: center;
-  }
-  .footer-follow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 600;
-    padding: 10px 18px;
-    border-radius: 100px;
-    background: var(--text-primary);
-    color: var(--text-inverse);
-    text-decoration: none;
-    transition: all 0.2s var(--ease-out);
-  }
-  .footer-follow:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px -6px hsla(var(--shadow-color) / 0.4);
-  }
-  .footer-follow svg { width: 14px; height: 14px; }
-  
-  /* Mobile bottom nav */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    background: var(--bg-secondary);
-    border-top: 1px solid var(--border-default);
-    border-bottom: none;
-    padding: 10px 8px;
-    padding-bottom: max(10px, env(safe-area-inset-bottom));
-    z-index: 200;
-    justify-content: space-around;
-    box-shadow: 0 -4px 20px -4px hsla(var(--shadow-color) / 0.1);
-  }
-  .mobile-nav-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 12px;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    transition: all 0.2s var(--ease-out);
-  }
-  .mobile-nav-link .nav-icon {
-    font-size: 16px;
-  }
-  .mobile-nav-link .nav-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .mobile-nav-link.active {
-    background: var(--bg-tertiary);
-  }
-  .mobile-nav-link.active .nav-label {
-    color: var(--text-primary);
-  }
-  .mobile-nav-link.security .nav-label { color: var(--red); }
-  .mobile-nav-link.infra .nav-label { color: var(--amber); }
-  .mobile-nav-link.data .nav-label { color: var(--blue); }
-  .mobile-nav-link.code .nav-label { color: var(--green); }
-  .mobile-nav-link.ux .nav-label { color: var(--purple); }
-  
-  /* Toast notification */
-  .toast {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    padding: 12px 20px;
-    background: var(--text-primary);
-    color: var(--text-inverse);
-    font-family: var(--font-mono);
-    font-size: 13px;
-    border-radius: 100px;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s var(--ease-spring);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .toast.visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
-  .toast svg { width: 16px; height: 16px; color: var(--green); }
-
-  /* Download Modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: var(--overlay);
-    backdrop-filter: blur(4px);
-    z-index: 500;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 24px 48px -12px hsla(var(--shadow-color) / 0.4);
-  }
-  .modal-title {
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-  }
-  .modal-desc {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-  }
-  .modal-options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .modal-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.2s var(--ease-out);
-    text-decoration: none;
-    color: inherit;
-  }
-  .modal-option:hover {
-    background: var(--bg-elevated);
-    border-color: var(--border-strong);
-  }
-  .modal-option-icon {
-    width: 36px;
-    height: 36px;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-tertiary);
-  }
-  .modal-option-icon svg { width: 18px; height: 18px; }
-  .modal-option-text { flex: 1; }
-  .modal-option-title {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--text-primary);
-  }
-  .modal-option-subtitle {
-    font-size: 12px;
-    color: var(--text-tertiary);
-  }
-  .modal-close {
-    margin-top: 16px;
-    width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
-    font-family: var(--font-body);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s var(--ease-out);
-  }
-  .modal-close:hover {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-  }
-
-  :root {
-    /* Typography */
-    --font-display: 'Fraunces', Georgia, serif;
-    --font-body: 'DM Sans', -apple-system, sans-serif;
-    --font-mono: 'DM Mono', 'SF Mono', monospace;
-    --text-scale: 1;
-    
-    /* Spacing */
-    --nav-h: 60px;
-    --container-max: 720px;
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 20px;
-    
-    /* Transitions */
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  
-  /* Text size variants - applied to html element */
-  html[data-text-size="small"] { --text-scale: 0.8; }
-  html[data-text-size="medium"] { --text-scale: 1; }
-  html[data-text-size="large"] { --text-scale: 1.25; }
-
-  /* ═══════════ DARK THEME ═══════════ */
-  [data-theme="dark"] {
-    --bg-primary: #121212;
-    --bg-secondary: #1a1a1a;
-    --bg-tertiary: #222222;
-    --bg-elevated: #2a2a2a;
-    
-    --border-subtle: rgba(255, 255, 255, 0.06);
-    --border-default: rgba(255, 255, 255, 0.1);
-    --border-strong: rgba(255, 255, 255, 0.15);
-    
-    --text-primary: #f5f5f5;
-    --text-secondary: #a8a8a8;
-    --text-tertiary: #6b6b6b;
-    --text-inverse: #121212;
-    
-    --red: #ff6b6b;
-    --red-soft: rgba(255, 107, 107, 0.1);
-    --red-border: rgba(255, 107, 107, 0.25);
-    
-    --amber: #ffb347;
-    --amber-soft: rgba(255, 179, 71, 0.1);
-    --amber-border: rgba(255, 179, 71, 0.25);
-    
-    --blue: #5cc8ff;
-    --blue-soft: rgba(92, 200, 255, 0.1);
-    --blue-border: rgba(92, 200, 255, 0.25);
-    
-    --green: #69db7c;
-    --green-soft: rgba(105, 219, 124, 0.1);
-    --green-border: rgba(105, 219, 124, 0.25);
-    
-    --purple: #b197fc;
-    --purple-soft: rgba(177, 151, 252, 0.1);
-    --purple-border: rgba(177, 151, 252, 0.25);
-    
-    --overlay: rgba(0, 0, 0, 0.5);
-    --shadow-color: 0deg 0% 0%;
-  }
-
-  /* ═══════════ LIGHT THEME ═══════════ */
-  [data-theme="light"] {
-    --bg-primary: #fafafa;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #f0f0f0;
-    --bg-elevated: #ffffff;
-    
-    --border-subtle: rgba(0, 0, 0, 0.04);
-    --border-default: rgba(0, 0, 0, 0.08);
-    --border-strong: rgba(0, 0, 0, 0.12);
-    
-    --text-primary: #1a1a1a;
-    --text-secondary: #666666;
-    --text-tertiary: #999999;
-    --text-inverse: #ffffff;
-    
-    --red: #e53935;
-    --red-soft: rgba(229, 57, 53, 0.08);
-    --red-border: rgba(229, 57, 53, 0.2);
-    
-    --amber: #ef8c00;
-    --amber-soft: rgba(239, 140, 0, 0.08);
-    --amber-border: rgba(239, 140, 0, 0.2);
-    
-    --blue: #0088cc;
-    --blue-soft: rgba(0, 136, 204, 0.08);
-    --blue-border: rgba(0, 136, 204, 0.2);
-    
-    --green: #2e9e45;
-    --green-soft: rgba(46, 158, 69, 0.08);
-    --green-border: rgba(46, 158, 69, 0.2);
-    
-    --purple: #7c4dff;
-    --purple-soft: rgba(124, 77, 255, 0.08);
-    --purple-border: rgba(124, 77, 255, 0.2);
-    
-    --overlay: rgba(255, 255, 255, 0.8);
-    --shadow-color: 220deg 10% 50%;
-  }
-
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--nav-h) + 24px);
-  }
-
-  body {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: var(--font-body);
-    font-size: calc(15px * var(--text-scale));
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    min-height: 100vh;
-    transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
-  }
-
-  /* ═══════════ PROGRESS BAR ═══════════ */
-  .progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 0%;
-    height: 3px;
-    background: linear-gradient(90deg, var(--red), var(--amber), var(--green));
-    z-index: 1000;
-    transition: width 0.1s linear;
-  }
-
-  /* ═══════════ NAVBAR ═══════════ */
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    height: var(--nav-h);
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-default);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    transition: background 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
-  }
-
-  .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-
-  .nav-logo {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-tertiary);
-    letter-spacing: 0.02em;
-  }
-
-  .nav-logo span {
-    color: var(--red);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .nav-links::-webkit-scrollbar { display: none; }
-
-  .nav-link {
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-tertiary);
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: var(--radius-sm);
-    white-space: nowrap;
-    transition: all 0.2s var(--ease-out);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .nav-link:hover {
-    color: var(--text-primary);
-    background: var(--bg-tertiary);
-  }
-
-  .nav-link.active {
-    color: var(--text-primary);
-    background: var(--bg-tertiary);
-  }
-
-  .nav-count {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    opacity: 0.6;
-  }
-
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* Text Size Toggle */
-  .text-size-toggle {
-    position: relative;
-  }
-  .text-size-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-default);
-    background: var(--bg-tertiary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s var(--ease-out);
-    color: var(--text-secondary);
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 600;
-  }
-  .text-size-btn:hover {
-    background: var(--bg-elevated);
-    border-color: var(--border-strong);
-    color: var(--text-primary);
-  }
-  .text-size-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 8px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-sm);
-    padding: 6px;
-    display: none;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 100px;
-    box-shadow: 0 8px 24px -8px hsla(var(--shadow-color) / 0.3);
-    z-index: 200;
-  }
-  .text-size-dropdown.open { display: flex; }
-  .text-size-option {
-    padding: 8px 12px;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    font-family: var(--font-body);
-    font-size: 13px;
-    cursor: pointer;
-    border-radius: 4px;
-    text-align: left;
-    transition: all 0.15s var(--ease-out);
-  }
-  .text-size-option:hover {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-  }
-  .text-size-option.active {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    font-weight: 600;
-  }
-
-  /* Theme Toggle */
-  .theme-toggle {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-default);
-    background: var(--bg-tertiary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s var(--ease-out);
-    color: var(--text-secondary);
-  }
-
-  .theme-toggle:hover {
-    background: var(--bg-elevated);
-    border-color: var(--border-strong);
-    color: var(--text-primary);
-  }
-
-  .theme-toggle svg {
-    width: 18px;
-    height: 18px;
-    transition: transform 0.3s var(--ease-spring);
-  }
-
-  .theme-toggle:hover svg {
-    transform: rotate(15deg);
-  }
-
-  [data-theme="dark"] .icon-sun { display: block; }
-  [data-theme="dark"] .icon-moon { display: none; }
-  [data-theme="light"] .icon-sun { display: none; }
-  [data-theme="light"] .icon-moon { display: block; }
-
-  /* ═══════════ CONTAINER ═══════════ */
-  .container {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: 72px 24px 120px;
-  }
-
-  /* ═══════════ HERO ═══════════ */
-  .hero {
-    margin-bottom: 80px;
-    position: relative;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-tertiary);
-    padding: 8px 14px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-default);
-    border-radius: 100px;
-    margin-bottom: 32px;
-  }
-
-  .hero-badge::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: var(--red);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.9); }
-  }
-
-  .hero-number {
-    font-family: var(--font-display);
-    font-size: clamp(120px, 28vw, 220px);
-    font-weight: 300;
-    color: var(--text-primary);
-    line-height: 0.85;
-    letter-spacing: -0.04em;
-    opacity: 0.12;
-    position: absolute;
-    top: 40px;
-    right: -20px;
-    z-index: -1;
-    user-select: none;
-  }
-
-  .hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(32px, 7vw, 52px);
-    font-weight: 400;
-    line-height: 1.15;
-    color: var(--text-primary);
-    letter-spacing: -0.025em;
-    max-width: 580px;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--red);
-    font-weight: 500;
-  }
-
-  .hero-subtitle {
-    font-size: calc(16px * var(--text-scale));
-    color: var(--text-secondary);
-    margin-top: 20px;
-    line-height: 1.7;
-    max-width: 480px;
-  }
-
-  .hero-stats {
-    display: flex;
-    gap: 32px;
-    margin-top: 40px;
-    padding-top: 32px;
-    border-top: 1px solid var(--border-default);
-    flex-wrap: wrap;
-  }
-
-  .stat {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .stat-value {
-    font-family: var(--font-display);
-    font-size: 32px;
-    font-weight: 500;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .stat.security .stat-value { color: var(--red); }
-  .stat.infra .stat-value { color: var(--amber); }
-  .stat.data .stat-value { color: var(--blue); }
-  .stat.code .stat-value { color: var(--green); }
-  .stat.ux .stat-value { color: var(--purple); }
-
-  /* ═══════════ SECTIONS ═══════════ */
-  .section {
-    margin-top: 64px;
-    scroll-margin-top: calc(var(--nav-h) + 24px);
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
     gap: 16px;
-    margin-bottom: 24px;
   }
-
-  .section-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
+  .footer-avatar-wrap { margin: 0 auto; }
+  .search-modal {
+    margin-top: 0;
+    border-radius: 0;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
   }
+  .search-results { max-height: calc(100vh - 60px); }
+}
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Hub Page Template
+   Homepage layout, hero, sections, pagination
+   ═══════════════════════════════════════ */
 
-  .section-icon.security { background: var(--red-soft); border: 1px solid var(--red-border); }
-  .section-icon.infra { background: var(--amber-soft); border: 1px solid var(--amber-border); }
-  .section-icon.data { background: var(--blue-soft); border: 1px solid var(--blue-border); }
-  .section-icon.code { background: var(--green-soft); border: 1px solid var(--green-border); }
-  .section-icon.ux { background: var(--purple-soft); border: 1px solid var(--purple-border); }
+.hub-container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 72px 24px 80px;
+}
 
-  .section-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
+/* ═══ HERO ═══ */
+.hero {
+  margin-bottom: 72px;
+  position: relative;
+}
 
-  .section-title {
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: 100px;
+  margin-bottom: 32px;
+}
 
-  .section-subtitle {
-    font-size: calc(13px * var(--text-scale));
-    color: var(--text-tertiary);
-  }
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--amber);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
 
-  /* ═══════════ ITEMS ═══════════ */
-  .items {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}
 
-  .item {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    transition: all 0.25s var(--ease-out);
-  }
+/* Carousel */
+.hero-carousel {
+  position: relative;
+  min-height: clamp(80px, 14vw, 130px);
+  margin-bottom: 4px;
+}
 
-  .item:hover {
-    border-color: var(--border-strong);
-    box-shadow: 0 4px 24px -8px hsla(var(--shadow-color) / 0.15);
-  }
+.hero-slide {
+  position: absolute;
+  top: 0; left: 0;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+  pointer-events: none;
+}
 
-  .item.security:hover { border-color: var(--red-border); }
-  .item.infra:hover { border-color: var(--amber-border); }
-  .item.data:hover { border-color: var(--blue-border); }
-  .item.code:hover { border-color: var(--green-border); }
-  .item.ux:hover { border-color: var(--purple-border); }
+.hero-slide.active {
+  opacity: 1;
+  position: relative;
+  pointer-events: auto;
+}
 
-  .item-header {
-    display: grid;
-    grid-template-columns: 44px 1fr auto auto auto;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 20px;
-    cursor: pointer;
-    user-select: none;
-  }
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 7vw, 52px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  max-width: 580px;
+}
 
-  .item-number {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-tertiary);
-    transition: color 0.2s var(--ease-out);
-  }
+.hero-title em {
+  font-style: italic;
+  color: var(--amber);
+  font-weight: 500;
+}
 
-  .item.security .item-number { color: var(--red); }
-  .item.infra .item-number { color: var(--amber); }
-  .item.data .item-number { color: var(--blue); }
-  .item.code .item-number { color: var(--green); }
-  .item.ux .item-number { color: var(--purple); }
+.hero-subtitle {
+  font-size: calc(16px * var(--text-scale));
+  color: var(--text-secondary);
+  margin-top: 24px;
+  margin-bottom: 36px;
+  line-height: 1.7;
+  max-width: 480px;
+}
 
-  .item-main {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+.hero-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 28px;
+}
 
-  .item-problem {
-    font-size: calc(14px * var(--text-scale));
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.4;
-  }
+.hero-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-default);
+  cursor: pointer;
+  transition: all 0.2s;
+}
 
-  .item-consequence {
-    font-size: calc(13px * var(--text-scale));
-    color: var(--text-secondary);
-    line-height: 1.5;
-  }
+.hero-dot.active {
+  background: var(--amber);
+  width: 20px;
+  border-radius: 3px;
+}
 
-  .item.security .item-consequence strong { color: var(--red); font-weight: 600; }
-  .item.infra .item-consequence strong { color: var(--amber); font-weight: 600; }
-  .item.data .item-consequence strong { color: var(--blue); font-weight: 600; }
-  .item.code .item-consequence strong { color: var(--green); font-weight: 600; }
-  .item.ux .item-consequence strong { color: var(--purple); font-weight: 600; }
+/* ═══ SECTION CARDS ═══ */
+.sections { margin-bottom: 72px; }
 
-  .item-toggle {
-    width: 28px;
-    height: 28px;
-    border-radius: var(--radius-sm);
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-subtle);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s var(--ease-out);
-    flex-shrink: 0;
-  }
+.sections-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
 
-  .item-toggle svg {
-    width: 14px;
-    height: 14px;
-    color: var(--text-tertiary);
-    transition: transform 0.3s var(--ease-spring);
-  }
+.sections-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+}
 
-  .item.expanded .item-toggle svg {
-    transform: rotate(180deg);
-  }
+.sections-pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  .item-header:hover .item-toggle {
-    background: var(--bg-elevated);
-    border-color: var(--border-default);
-  }
+.sections-pager-info {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
 
-  /* Expandable Content */
-  .item-details {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s var(--ease-out);
-  }
+.pager-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-out);
+  color: var(--text-secondary);
+}
 
-  .item.expanded .item-details {
-    max-height: 600px;
-  }
+.pager-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
 
-  .item-details-inner {
-    padding: 0 20px 20px 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+.pager-btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
 
-  .detail-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+.pager-btn svg { width: 14px; height: 14px; }
 
-  .detail-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-tertiary);
-  }
+.sections-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
-  .detail-content {
-    font-size: calc(14px * var(--text-scale));
-    color: var(--text-secondary);
-    line-height: 1.7;
-  }
+.sec-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s var(--ease-out);
+}
 
-  .detail-content code {
-    font-family: var(--font-mono);
-    font-size: calc(12px * var(--text-scale));
-    background: var(--bg-tertiary);
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: var(--text-primary);
-  }
+.sec-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 24px -8px hsla(var(--shadow-color) / 0.15);
+  transform: translateY(-1px);
+}
 
-  .detail-content ul {
-    margin: 8px 0 0 0;
-    padding-left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+.sec-card.muted {
+  opacity: 0.4;
+  pointer-events: none;
+}
 
-  .detail-content li {
-    color: var(--text-secondary);
-  }
+.sec-card.muted:hover { transform: none; box-shadow: none; }
 
-  .fix-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    width: fit-content;
-  }
+.sec-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
 
-  .fix-tag.quick {
-    background: var(--green-soft);
-    color: var(--green);
-    border: 1px solid var(--green-border);
-  }
+.sec-icon.red    { background: var(--red-soft);    border: 1px solid var(--red-border); }
+.sec-icon.amber  { background: var(--amber-soft);  border: 1px solid var(--amber-border); }
+.sec-icon.blue   { background: var(--blue-soft);   border: 1px solid var(--blue-border); }
+.sec-icon.green  { background: var(--green-soft);  border: 1px solid var(--green-border); }
+.sec-icon.purple { background: var(--purple-soft); border: 1px solid var(--purple-border); }
 
-  .fix-tag.moderate {
-    background: var(--amber-soft);
-    color: var(--amber);
-    border: 1px solid var(--amber-border);
-  }
+.sec-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
-  .fix-tag.involved {
-    background: var(--red-soft);
-    color: var(--red);
-    border: 1px solid var(--red-border);
-  }
+.sec-title {
+  font-family: var(--font-display);
+  font-size: calc(16px * var(--text-scale));
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
 
-  /* ═══════════ FOOTER ═══════════ */
-  footer {
-    margin-top: 100px;
-    padding: 48px 0;
-    border-top: 1px solid var(--border-default);
-    text-align: center;
-  }
+.sec-desc {
+  font-size: calc(13px * var(--text-scale));
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
 
-  .footer-quote {
-    font-family: var(--font-display);
-    font-size: 24px;
-    font-style: italic;
-    font-weight: 400;
-    color: var(--text-secondary);
-    line-height: 1.4;
-    margin-bottom: 32px;
-  }
+.sec-arrow {
+  color: var(--text-tertiary);
+  font-size: 18px;
+  transition: transform 0.2s var(--ease-out);
+}
 
-  .footer-cta {
-    font-size: 14px;
-    color: var(--text-tertiary);
-    margin-bottom: 40px;
-  }
+.sec-card:hover .sec-arrow {
+  transform: translateX(3px);
+  color: var(--text-secondary);
+}
 
-  .footer-brand {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding-top: 32px;
-    border-top: 1px solid var(--border-subtle);
-  }
+/* ═══ ABOUT ═══ */
+.about {
+  margin-bottom: 72px;
+  padding: 32px 0;
+  border-top: 1px solid var(--border-default);
+}
 
-  .footer-brand-text {
-    font-size: 13px;
-    color: var(--text-tertiary);
-  }
+.about-title {
+  font-family: var(--font-display);
+  font-size: calc(22px * var(--text-scale));
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
 
-  .footer-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
-    text-decoration: none;
-    padding: 12px 24px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-default);
-    border-radius: 100px;
-    transition: all 0.2s var(--ease-out);
-  }
+.about p {
+  font-size: calc(15px * var(--text-scale));
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  max-width: 560px;
+}
 
-  .footer-link:hover {
-    background: var(--bg-tertiary);
-    border-color: var(--border-strong);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px -4px hsla(var(--shadow-color) / 0.2);
-  }
+/* ═══ NEWSLETTER ═══ */
+.nl {
+  padding: 32px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  margin-bottom: 72px;
+  text-align: center;
+}
 
-  .footer-link svg {
-    width: 16px;
-    height: 16px;
-  }
+.nl-title {
+  font-family: var(--font-display);
+  font-size: calc(20px * var(--text-scale));
+  font-weight: 500;
+  margin-bottom: 6px;
+}
 
-  /* ═══════════ BACK TO TOP ═══════════ */
-  .back-to-top {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-default);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(16px);
-    transition: all 0.3s var(--ease-out);
-    z-index: 50;
-    box-shadow: 0 4px 24px -8px hsla(var(--shadow-color) / 0.2);
-  }
+.nl-desc {
+  font-size: calc(14px * var(--text-scale));
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
 
-  .back-to-top.visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
+.nl-form { display: flex; gap: 8px; max-width: 400px; margin: 0 auto; }
 
-  .back-to-top:hover {
-    background: var(--bg-tertiary);
-    border-color: var(--border-strong);
-    color: var(--text-primary);
-    transform: translateY(-4px);
-  }
+.nl-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
 
-  .back-to-top svg {
-    width: 20px;
-    height: 20px;
-  }
+.nl-input:focus { outline: none; border-color: var(--border-strong); }
+.nl-input::placeholder { color: var(--text-tertiary); }
 
-  /* ═══════════ ANIMATIONS ═══════════ */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+.nl-btn {
+  padding: 12px 20px;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+}
 
-  .hero { animation: fadeUp 0.8s var(--ease-out) both; }
-  .hero-stats { animation: fadeUp 0.8s var(--ease-out) 0.1s both; }
+.nl-btn:hover { opacity: 0.85; }
 
-  .item {
-    opacity: 0;
-    transform: translateY(12px);
-  }
+.nl-msg { font-size: 13px; margin-top: 10px; display: none; }
+.nl-msg.ok { display: block; color: var(--green); }
+.nl-msg.err { display: block; color: var(--red); }
 
-  .item.visible {
-    animation: fadeUp 0.5s var(--ease-out) forwards;
-  }
+/* ═══ WHAT'S NEXT ═══ */
+.whats-next {
+  margin-bottom: 48px;
+}
 
-  /* ═══════════ RESPONSIVE ═══════════ */
-  @media (max-width: 680px) {
-    nav { padding: 0 16px; }
-    .nav-links { display: none; }
-    .container { padding: 48px 16px 140px; }
-    .hero-stats { gap: 20px; justify-content: center; }
-    .stat { align-items: center; text-align: center; }
-    .stat-value { font-size: 26px; }
-    .item-header { 
-      grid-template-columns: 36px 1fr auto auto; 
-      padding: 14px 16px; 
-      gap: 10px; 
-    }
-    .item-header .severity { display: none; }
-    .item-details-inner { padding: 0 16px 16px 52px; }
-    .back-to-top { bottom: 80px; right: 20px; width: 44px; height: 44px; }
-    .site-footer { padding: 32px 16px 90px; }
-    .footer-accent { margin: -32px -16px 24px; }
-    .footer-actions { flex-direction: column; }
-    .footer-btn { justify-content: center; }
-    .footer-bottom { grid-template-columns: 1fr; justify-items: center; gap: 20px; }
-    .footer-author-bio { max-width: none; }
-    .mobile-nav { display: flex; }
-    .toast { bottom: 80px; }
-  }
+.whats-next-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+}
 
-  /* ═══════════ PRINT ═══════════ */
-  @media print {
-    nav, .back-to-top, .theme-toggle { display: none !important; }
-    .item-details { max-height: none !important; }
-    .container { max-width: 100%; padding: 20px; }
-  }
-</style>
+.whats-next-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.wn-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.wn-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 24px -8px hsla(var(--shadow-color) / 0.15);
+  transform: translateY(-2px);
+}
+
+.wn-card.muted {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.wn-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wn-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.wn-card-icon.red    { background: var(--red-soft);    border: 1px solid var(--red-border); }
+.wn-card-icon.amber  { background: var(--amber-soft);  border: 1px solid var(--amber-border); }
+.wn-card-icon.blue   { background: var(--blue-soft);   border: 1px solid var(--blue-border); }
+.wn-card-icon.green  { background: var(--green-soft);  border: 1px solid var(--green-border); }
+.wn-card-icon.purple { background: var(--purple-soft); border: 1px solid var(--purple-border); }
+
+.wn-card-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.wn-card-title {
+  font-family: var(--font-display);
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.wn-card-desc {
+  font-size: calc(12px * var(--text-scale));
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.wn-card-arrow {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-top: auto;
+  transition: transform 0.2s var(--ease-out);
+}
+
+.wn-card:hover .wn-card-arrow {
+  transform: translateX(3px);
+  color: var(--text-secondary);
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 600px) {
+  .nl-form { flex-direction: column; }
+  .hero-title { font-size: clamp(26px, 8vw, 40px); }
+  .hero-carousel { min-height: clamp(70px, 18vw, 100px); }
+}
+  </style>
 </head>
 <body>
 
-<div class="progress-bar" id="progressBar"></div>
-
-<nav>
-  <div class="nav-left">
-    <div class="nav-logo"><span>//</span> SHIPWRECKS</div>
-    <div class="nav-links">
-      <a href="#security" class="nav-link active" data-section="security">Security <span class="nav-count">11</span></a>
-      <a href="#infra" class="nav-link" data-section="infra">Infra <span class="nav-count">10</span></a>
-      <a href="#data" class="nav-link" data-section="data">Data <span class="nav-count">6</span></a>
-      <a href="#code" class="nav-link" data-section="code">Code <span class="nav-count">7</span></a>
-      <a href="#ux" class="nav-link" data-section="ux">UX <span class="nav-count">3</span></a>
-    </div>
-  </div>
-  <div class="nav-right">
-    <div class="text-size-toggle">
-      <button class="text-size-btn" id="textSizeBtn" aria-label="Text size">Aa</button>
-      <div class="text-size-dropdown" id="textSizeDropdown">
-        <button class="text-size-option" data-size="small">Small</button>
-        <button class="text-size-option active" data-size="medium">Medium</button>
-        <button class="text-size-option" data-size="large">Large</button>
-      </div>
-    </div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="5"></circle>
-        <line x1="12" y1="1" x2="12" y2="3"></line>
-        <line x1="12" y1="21" x2="12" y2="23"></line>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-        <line x1="1" y1="12" x2="3" y2="12"></line>
-        <line x1="21" y1="12" x2="23" y2="12"></line>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-      </svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-      </svg>
-    </button>
-  </div>
-</nav>
-
-<div class="container">
-
-  <div class="hero">
-    <div class="hero-badge">Production Checklist</div>
-    <div class="hero-number">37</div>
-    <h1 class="hero-title">Mistakes your AI assistant <em>forgot to mention</em></h1>
-    <p class="hero-subtitle">You asked Cursor to build you an app. It did. It just skipped the code review that keeps you from getting hacked, going down, or losing data.</p>
-    <p class="hero-subtitle" style="margin-top: 12px; font-size: 13px; color: var(--text-tertiary); font-style: italic;">Compiled from real production incidents. Updated for 2026.</p>
-    <div class="hero-stats">
-      <div class="stat security">
-        <div class="stat-value">11</div>
-        <div class="stat-label">Security</div>
-      </div>
-      <div class="stat infra">
-        <div class="stat-value">10</div>
-        <div class="stat-label">Infra</div>
-      </div>
-      <div class="stat data">
-        <div class="stat-value">6</div>
-        <div class="stat-label">Data</div>
-      </div>
-      <div class="stat code">
-        <div class="stat-value">7</div>
-        <div class="stat-label">Code</div>
-      </div>
-      <div class="stat ux">
-        <div class="stat-value">3</div>
-        <div class="stat-label">UX</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════ SECURITY ═══════════ -->
-  <section class="section" id="security">
-    <div class="section-header">
-      <div class="section-icon security">🔓</div>
-      <div class="section-meta">
-        <h2 class="section-title">Security</h2>
-        <p class="section-subtitle">11 ways to get owned</p>
-      </div>
-    </div>
-    <div class="items">
-
-      <article class="item security" id="mistake-1">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">01</div>
-          <div class="item-main">
-            <div class="item-problem">Auth tokens stored in localStorage</div>
-            <div class="item-consequence">One XSS attack → <strong>every user account compromised</strong></div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-1')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">localStorage is accessible to any JavaScript running on your page. If an attacker injects a script (XSS), they can steal every user's token and impersonate them indefinitely.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Use <code>httpOnly</code> cookies for session tokens — JavaScript can't access them</li>
-                  <li>Set <code>Secure</code> and <code>SameSite=Strict</code> flags</li>
-                  <li>If you must use localStorage, implement token rotation and short expiry</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 30 min</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-2">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">02</div>
-          <div class="item-main">
-            <div class="item-problem">No input sanitisation on forms</div>
-            <div class="item-consequence">SQL injection still works in 2026. <strong>Your AI didn't tell you that.</strong></div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-2')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Unsanitized input lets attackers inject malicious SQL, JavaScript, or commands. They can dump your database, delete records, or escalate privileges.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Use parameterized queries or an ORM — never concatenate user input into SQL</li>
-                  <li>Validate and sanitize all input on the server side</li>
-                  <li>Escape output when rendering user content in HTML</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-4 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-3">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">03</div>
-          <div class="item-main">
-            <div class="item-problem">Hardcoded API keys in the frontend</div>
-            <div class="item-consequence">Someone <strong>will find them within 48 hours</strong> of launch</div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-3')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Frontend code is fully visible to users. Bots scrape GitHub and npm packages for exposed keys. Your API bill or data breach is one <code>Ctrl+U</code> away.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Move sensitive API calls to a backend proxy</li>
-                  <li>Use environment variables on the server</li>
-                  <li>If client-side keys are necessary (e.g., analytics), use restricted keys with domain locking</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-4">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">04</div>
-          <div class="item-main">
-            <div class="item-problem">Stripe webhooks with no signature verification</div>
-            <div class="item-consequence">Anyone can <strong>fake a successful payment event</strong></div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-4')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Without verifying the webhook signature, an attacker can POST fake events to your endpoint, granting themselves premium access or marking orders as paid.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Always use <code>stripe.webhooks.constructEvent()</code> to verify signatures</li>
-                  <li>Store your webhook secret in environment variables</li>
-                  <li>Return 400 for invalid signatures; log the attempt</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 15 min</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-5">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">05</div>
-          <div class="item-main">
-            <div class="item-problem">Sessions that never expire</div>
-            <div class="item-consequence">Stolen token = <strong>permanent access. Forever.</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-5')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Long-lived tokens give attackers unlimited time to exploit a stolen credential. Even after a user changes their password, the old token works.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Set short access token expiry (15-60 min)</li>
-                  <li>Use refresh tokens for seamless re-auth</li>
-                  <li>Invalidate all sessions on password change</li>
-                  <li>Implement absolute session timeout (e.g., 30 days max)</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-3 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-6">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">06</div>
-          <div class="item-main">
-            <div class="item-problem">Password reset links that don't expire</div>
-            <div class="item-consequence">Old email in someone's inbox = <strong>instant account takeover</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-6')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">If someone gains access to a user's email (phishing, shared computer, breach), every valid reset link is an open door to their account.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Expire reset tokens after 15-60 minutes</li>
-                  <li>Invalidate token after single use</li>
-                  <li>Invalidate all reset tokens when password is changed</li>
-                  <li>Use cryptographically secure random tokens</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 30 min</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-7">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">07</div>
-          <div class="item-main">
-            <div class="item-problem">No CORS policy</div>
-            <div class="item-consequence">Any website on the internet can <strong>make requests to your API</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-7')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Without CORS restrictions, malicious sites can make authenticated requests using your users' cookies, stealing data or triggering actions on their behalf.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Configure <code>Access-Control-Allow-Origin</code> to your specific domains</li>
-                  <li>Never use <code>*</code> with credentials</li>
-                  <li>Whitelist only the origins you control</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 15 min</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-8">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">08</div>
-          <div class="item-main">
-            <div class="item-problem">Admin routes with no role checks</div>
-            <div class="item-consequence">Any logged-in user can <strong>access your admin panel</strong></div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-8')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Authentication ≠ Authorization. Just because someone is logged in doesn't mean they should access admin functions. This is called Broken Access Control — OWASP's #1 vulnerability.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Implement role-based access control (RBAC) on every protected route</li>
-                  <li>Check permissions server-side, not just in the UI</li>
-                  <li>Use middleware to enforce authorization consistently</li>
-                  <li>Audit access logs regularly</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-4 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-9">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">09</div>
-          <div class="item-main">
-            <div class="item-problem">No CSRF protection on state-changing endpoints</div>
-            <div class="item-consequence">Any malicious site can <strong>trigger actions as your logged-in users</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-9')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Cross-Site Request Forgery tricks browsers into making authenticated requests. A hidden form on a malicious site could transfer funds, change settings, or delete accounts.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Use CSRF tokens on all state-changing requests</li>
-                  <li>Set <code>SameSite=Strict</code> or <code>Lax</code> on cookies</li>
-                  <li>Verify the <code>Origin</code> header on requests</li>
-                  <li>Most frameworks have built-in CSRF protection — enable it</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-10">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">10</div>
-          <div class="item-main">
-            <div class="item-problem">Secrets committed to git history</div>
-            <div class="item-consequence">Even if you delete them — <strong>they're in the commit log forever</strong></div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-10')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Git remembers everything. Even "deleted" secrets live in your repo history. Bots scan GitHub constantly for leaked credentials — they'll find yours.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Use <code>.env</code> files and add them to <code>.gitignore</code> before first commit</li>
-                  <li>Use git-secrets or gitleaks to prevent accidental commits</li>
-                  <li>If leaked: rotate the secret immediately, then rewrite history with <code>git filter-branch</code> or BFG Repo-Cleaner</li>
-                  <li>Use a secrets manager (Vault, AWS Secrets Manager, etc.) for production</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag involved">🔨 Involved — If already leaked</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item security" id="mistake-11">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">11</div>
-          <div class="item-main">
-            <div class="item-problem">No Content Security Policy headers</div>
-            <div class="item-consequence">Opens the door to <strong>XSS, clickjacking, and data exfiltration</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-11')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">CSP tells browsers which sources of content are trusted. Without it, injected scripts run freely, iframes can overlay your UI, and data leaks to attacker domains.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Add <code>Content-Security-Policy</code> header</li>
-                  <li>Start with report-only mode to find violations</li>
-                  <li>Restrict <code>script-src</code>, <code>style-src</code>, <code>frame-ancestors</code></li>
-                  <li>Also add <code>X-Frame-Options</code> and <code>X-Content-Type-Options</code></li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- ═══════════ INFRASTRUCTURE ═══════════ -->
-  <section class="section" id="infra">
-    <div class="section-header">
-      <div class="section-icon infra">⚡</div>
-      <div class="section-meta">
-        <h2 class="section-title">Infrastructure</h2>
-        <p class="section-subtitle">10 ways to go down</p>
-      </div>
-    </div>
-    <div class="items">
-
-      <article class="item infra" id="mistake-12">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">12</div>
-          <div class="item-main">
-            <div class="item-problem">No rate limiting on API routes</div>
-            <div class="item-consequence">Anyone can spam your backend into <strong>a $500 bill overnight</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-12')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Without rate limits, a single script can hammer your API endlessly. DDoS, credential stuffing, resource exhaustion — all trivially easy.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Implement rate limiting at the API gateway or app level</li>
-                  <li>Use sliding window or token bucket algorithms</li>
-                  <li>Set different limits per endpoint (auth endpoints need stricter limits)</li>
-                  <li>Return <code>429 Too Many Requests</code> with <code>Retry-After</code> header</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-13">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">13</div>
-          <div class="item-main">
-            <div class="item-problem">No database connection pooling</div>
-            <div class="item-consequence">First traffic spike = <strong>database crashes</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-13')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Opening a new database connection for every request is expensive. Under load, you exhaust connection limits, and the database stops accepting new connections.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Use a connection pooler like PgBouncer (Postgres) or built-in ORM pooling</li>
-                  <li>Configure pool size based on your database's max connections</li>
-                  <li>For serverless: use a managed pooler or connection proxy</li>
-                  <li>Monitor active connections and tune limits</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-14">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">14</div>
-          <div class="item-main">
-            <div class="item-problem">Images uploaded directly to your server</div>
-            <div class="item-consequence">No CDN = <strong>8-second load times + massive hosting bill</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-14')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Serving images from your app server blocks resources, increases latency for distant users, and scales terribly. One viral post and you're down.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Upload to S3, Cloudflare R2, or similar object storage</li>
-                  <li>Put a CDN in front (CloudFront, Cloudflare, etc.)</li>
-                  <li>Resize and optimize images on upload</li>
-                  <li>Use signed URLs if access control is needed</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag involved">🔨 Involved — 4-8 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-15">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">15</div>
-          <div class="item-main">
-            <div class="item-problem">Emails sent synchronously in request handlers</div>
-            <div class="item-consequence">One slow SMTP server = <strong>your entire app hangs</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-15')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Email delivery can take seconds and fail randomly. Blocking on email means slow page loads and cascading failures when email providers hiccup.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Queue emails for async processing (Redis, SQS, etc.)</li>
-                  <li>Return success immediately, process in background</li>
-                  <li>Implement retry logic with exponential backoff</li>
-                  <li>Monitor queue depth and delivery rates</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-3 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-16">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">16</div>
-          <div class="item-main">
-            <div class="item-problem">No health check endpoint</div>
-            <div class="item-consequence">Your app goes down silently. <strong>You find out from a client.</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-16')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Load balancers, orchestrators, and monitoring systems need a way to know if your app is healthy. Without it, they route traffic to dead instances.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Create a <code>/health</code> or <code>/ready</code> endpoint</li>
-                  <li>Check critical dependencies (database, cache, external services)</li>
-                  <li>Return appropriate status codes (200 healthy, 503 unhealthy)</li>
-                  <li>Configure load balancer to use health checks for routing</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 20 min</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-17">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">17</div>
-          <div class="item-main">
-            <div class="item-problem">No logging in production</div>
-            <div class="item-consequence">When something breaks you have <strong>zero idea where or why</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-17')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Without structured logging, debugging production issues becomes guesswork. You'll spend hours reproducing bugs that logs would explain in seconds.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Use structured logging (JSON) with consistent fields</li>
-                  <li>Include request IDs for tracing across services</li>
-                  <li>Log at appropriate levels (error, warn, info, debug)</li>
-                  <li>Ship logs to a central service (Datadog, Logtail, etc.)</li>
-                  <li>Set up alerts on error spikes</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-3 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-18">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">18</div>
-          <div class="item-main">
-            <div class="item-problem">No environment variable validation at startup</div>
-            <div class="item-consequence">App silently breaks in production <strong>with zero error message</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-18')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Missing or malformed env vars cause cryptic failures deep in your code. You'll chase ghosts before realizing <code>DATABASE_URL</code> was never set.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Validate all required env vars at startup, before handling requests</li>
-                  <li>Use a schema validator (Zod, envalid, etc.)</li>
-                  <li>Fail fast with clear error messages</li>
-                  <li>Document all required variables in your README</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 30 min</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-19">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">19</div>
-          <div class="item-main">
-            <div class="item-problem">No graceful shutdown handling</div>
-            <div class="item-consequence">Deploy mid-request → <strong>half-completed transactions</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-19')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">When your app receives SIGTERM, killing it immediately leaves requests incomplete, database transactions uncommitted, and users confused.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Handle SIGTERM: stop accepting new requests, finish existing ones</li>
-                  <li>Set a shutdown timeout (e.g., 30s max)</li>
-                  <li>Close database connections and flush logs</li>
-                  <li>Return 503 to load balancer health checks during shutdown</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-20">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">20</div>
-          <div class="item-main">
-            <div class="item-problem">No retry logic with backoff on external API calls</div>
-            <div class="item-consequence">One flaky third-party service <strong>takes your whole app down</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-20')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">External services fail. A lot. Without retries, transient failures become hard errors. Without backoff, you amplify the problem by hammering failing services.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Implement exponential backoff with jitter</li>
-                  <li>Only retry idempotent operations or use idempotency keys</li>
-                  <li>Set max retry limits to avoid infinite loops</li>
-                  <li>Consider circuit breaker patterns for persistent failures</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item infra" id="mistake-21">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">21</div>
-          <div class="item-main">
-            <div class="item-problem">No request timeout on outbound calls</div>
-            <div class="item-consequence">One hung dependency → <strong>your entire thread pool is gone</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-21')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Without timeouts, requests to slow services wait forever. All your workers get stuck waiting, and new requests queue up until everything grinds to a halt.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Set explicit timeouts on all HTTP clients</li>
-                  <li>Use separate connect and read timeouts</li>
-                  <li>Fail fast — a 5s timeout is usually better than waiting 60s</li>
-                  <li>Monitor timeout rates as a signal of dependency health</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 30 min</div>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- ═══════════ DATA ═══════════ -->
-  <section class="section" id="data">
-    <div class="section-header">
-      <div class="section-icon data">💾</div>
-      <div class="section-meta">
-        <h2 class="section-title">Data</h2>
-        <p class="section-subtitle">6 ways to lose everything</p>
-      </div>
-    </div>
-    <div class="items">
-
-      <article class="item data" id="mistake-22">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">22</div>
-          <div class="item-main">
-            <div class="item-problem">No database indexing on queried fields</div>
-            <div class="item-consequence">Works fine at 100 users. <strong>Completely dies at 1,000.</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-22')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Without indexes, every query scans every row. That 10ms query at 100 rows becomes a 10-second query at 100,000 rows. Your users will notice.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Add indexes on columns used in WHERE, JOIN, and ORDER BY</li>
-                  <li>Use <code>EXPLAIN ANALYZE</code> to understand query plans</li>
-                  <li>Index foreign keys</li>
-                  <li>Consider composite indexes for multi-column queries</li>
-                  <li>Don't over-index — each index slows writes</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item data" id="mistake-23">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">23</div>
-          <div class="item-main">
-            <div class="item-problem">No pagination on database queries</div>
-            <div class="item-consequence">One fetch <strong>loads your entire database into memory</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-23')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Fetching unbounded results crashes servers, times out requests, and creates terrible UX. Works in dev with 10 records; explodes in prod with 10 million.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Always use LIMIT/OFFSET or cursor-based pagination</li>
-                  <li>Set sane defaults (20-50 items per page)</li>
-                  <li>Implement cursor pagination for large datasets (offset is slow at high values)</li>
-                  <li>Return pagination metadata (total count, next cursor, etc.)</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item data" id="mistake-24">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">24</div>
-          <div class="item-main">
-            <div class="item-problem">No backup strategy on your database</div>
-            <div class="item-consequence">One bad migration = <strong>all your user data. Gone.</strong></div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-24')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Databases fail. Humans make mistakes. Ransomware exists. Without tested backups, you're one <code>DROP TABLE</code> away from catastrophe.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Enable automated daily backups (most managed DBs have this)</li>
-                  <li>Use point-in-time recovery if available</li>
-                  <li>Test your restore process regularly</li>
-                  <li>Keep backups in a different region/account</li>
-                  <li>Document your recovery runbook</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-3 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item data" id="mistake-25">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">25</div>
-          <div class="item-main">
-            <div class="item-problem">No soft deletes</div>
-            <div class="item-consequence">User clicks delete → data is actually gone. <strong>No recovery. No audit trail.</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-25')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Hard deletes are permanent and break referential integrity. Users accidentally delete things. Legal/compliance often requires retention. You'll wish you had an undo button.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Add a <code>deleted_at</code> timestamp column</li>
-                  <li>Filter out soft-deleted records in queries by default</li>
-                  <li>Implement a "trash" UI for recovery</li>
-                  <li>Schedule permanent deletion after a retention period</li>
-                  <li>Maintain foreign key relationships even when soft-deleted</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-4 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item data" id="mistake-26">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">26</div>
-          <div class="item-main">
-            <div class="item-problem">No created_at / updated_at timestamps</div>
-            <div class="item-consequence">You will need these. <strong>Retrofitting them is painful.</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-26')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Timestamps are essential for debugging, auditing, sync logic, cache invalidation, and sorting by recency. Adding them later requires migrations and backfills.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Add <code>created_at</code> and <code>updated_at</code> to every table from day one</li>
-                  <li>Use database-level defaults and triggers to auto-set them</li>
-                  <li>Index <code>created_at</code> for time-based queries</li>
-                  <li>Consider <code>deleted_at</code> for soft deletes</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 15 min per table</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item data" id="mistake-27">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">27</div>
-          <div class="item-main">
-            <div class="item-problem">Database migrations with no rollback plan</div>
-            <div class="item-consequence">One broken migration → <strong>you're stuck in a broken state</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-27')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Migrations fail partway. New columns break old code. You need to be able to roll back safely, or you'll be debugging production at 2am with no exit strategy.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Write reversible migrations with up() and down() methods</li>
-                  <li>Test rollbacks in staging before production</li>
-                  <li>Make migrations backward-compatible (expand/contract pattern)</li>
-                  <li>Take a backup before running destructive migrations</li>
-                  <li>Never delete columns or tables in the same deploy as code changes</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag involved">🔨 Involved — Requires discipline</div>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- ═══════════ CODE QUALITY ═══════════ -->
-  <section class="section" id="code">
-    <div class="section-header">
-      <div class="section-icon code">⚙️</div>
-      <div class="section-meta">
-        <h2 class="section-title">Code Quality</h2>
-        <p class="section-subtitle">7 ways to build on sand</p>
-      </div>
-    </div>
-    <div class="items">
-
-      <article class="item code" id="mistake-28">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">28</div>
-          <div class="item-main">
-            <div class="item-problem">No error boundaries in the UI</div>
-            <div class="item-consequence">One crash = white screen = <strong>user never comes back</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-28')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">One uncaught exception in React unmounts your entire app. A white screen is worse than a partial failure — users think your site is down.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Wrap key UI sections in Error Boundaries</li>
-                  <li>Show a friendly fallback UI instead of crashing</li>
-                  <li>Log errors to an error tracking service</li>
-                  <li>Offer users a way to retry or report the issue</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 1-2 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item code" id="mistake-29">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">29</div>
-          <div class="item-main">
-            <div class="item-problem">No TypeScript on AI-generated code</div>
-            <div class="item-consequence">AI writes confident, wrong, untyped code — <strong>and you ship it anyway</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-29')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">AI confidently hallucinates incorrect code. Without types, runtime errors surface only when users hit them. TypeScript catches mistakes at compile time.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Use TypeScript with strict mode enabled</li>
-                  <li>Define types for all API responses and database models</li>
-                  <li>Don't use <code>any</code> as an escape hatch</li>
-                  <li>Validate external data with Zod or similar</li>
-                  <li>Treat type errors as bugs, not annoyances</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag involved">🔨 Involved — Requires migration</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item code" id="mistake-30">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">30</div>
-          <div class="item-main">
-            <div class="item-problem">Trusting client-side validation only</div>
-            <div class="item-consequence">Anyone with curl can <strong>bypass every rule in your form</strong></div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-30')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Client-side validation is for UX, not security. Attackers bypass it trivially by editing JavaScript or sending raw HTTP requests.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Always validate on the server — never trust client input</li>
-                  <li>Use the same validation schema on client and server (Zod works both places)</li>
-                  <li>Validate types, formats, lengths, and business rules</li>
-                  <li>Client validation is a UX enhancement, not a security measure</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-3 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item code" id="mistake-31">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">31</div>
-          <div class="item-main">
-            <div class="item-problem">No CI/CD pipeline</div>
-            <div class="item-consequence">You're deploying from your laptop <strong>and hoping for the best</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-31')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Manual deploys are error-prone. "Works on my machine" isn't good enough. You need automated builds, tests, and deployments for reliability.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Set up GitHub Actions, GitLab CI, or similar</li>
-                  <li>Run tests and lint on every push</li>
-                  <li>Auto-deploy to staging on merge to main</li>
-                  <li>Use preview deployments for PRs</li>
-                  <li>Require passing CI before merge</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-4 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item code" id="mistake-32">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">32</div>
-          <div class="item-main">
-            <div class="item-problem">No tests on critical paths</div>
-            <div class="item-consequence">Payment, auth, signup — one regression = <strong>you're losing money</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-32')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Breaking checkout costs money. Breaking auth leaks data. You don't need 100% coverage — but the paths that make you money need tests.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Write integration tests for auth flows (signup, login, password reset)</li>
-                  <li>Test payment flows end-to-end with Stripe's test mode</li>
-                  <li>Add smoke tests for critical API endpoints</li>
-                  <li>Don't test everything — test what matters most</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag involved">🔨 Involved — 4-8 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item code" id="mistake-33">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">33</div>
-          <div class="item-main">
-            <div class="item-problem">Console.log as your debugging strategy</div>
-            <div class="item-consequence">Works locally. <strong>Tells you nothing in production.</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-33')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Console.log doesn't persist, doesn't structure, doesn't alert. Production bugs need context, stack traces, and history — not ephemeral print statements.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Use a proper logging library (pino, winston, etc.)</li>
-                  <li>Add error tracking (Sentry, Bugsnag, etc.)</li>
-                  <li>Learn browser DevTools (breakpoints, network tab, profiler)</li>
-                  <li>Use structured logs with context (user ID, request ID, etc.)</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-3 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item code" id="mistake-34">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">34</div>
-          <div class="item-main">
-            <div class="item-problem">No dependency pinning</div>
-            <div class="item-consequence">A patch update to a transitive dep <strong>breaks your build on Saturday night</strong></div>
-          </div>
-          <span class="severity medium">Medium</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-34')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Unpinned dependencies install the latest version at build time. A bad release to any package in your tree can break your app without you changing anything.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Commit your lockfile (<code>package-lock.json</code>, <code>yarn.lock</code>)</li>
-                  <li>Use exact versions for critical dependencies</li>
-                  <li>Use Dependabot or Renovate for controlled updates</li>
-                  <li>Test updates in CI before merging</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag quick">⚡ Quick fix — 10 min</div>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- ═══════════ UX ═══════════ -->
-  <section class="section" id="ux">
-    <div class="section-header">
-      <div class="section-icon ux">👁</div>
-      <div class="section-meta">
-        <h2 class="section-title">UX</h2>
-        <p class="section-subtitle">3 ways to lose every user</p>
-      </div>
-    </div>
-    <div class="items">
-
-      <article class="item ux" id="mistake-35">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">35</div>
-          <div class="item-main">
-            <div class="item-problem">No loading states</div>
-            <div class="item-consequence">User clicks, nothing happens, clicks 5 more times — <strong>5 duplicate requests fire</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-35')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Without feedback, users assume their click didn't register. Multiple clicks create duplicate submissions, race conditions, and confused users.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Show loading spinners immediately on action</li>
-                  <li>Disable buttons while requests are in flight</li>
-                  <li>Use skeleton screens for page/section loads</li>
-                  <li>Implement optimistic UI where appropriate</li>
-                  <li>Add debouncing to prevent duplicate submissions</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-3 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item ux" id="mistake-36">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">36</div>
-          <div class="item-main">
-            <div class="item-problem">No error handling on network failures</div>
-            <div class="item-consequence">Long form, hit submit, connection drops — <strong>everything is lost</strong></div>
-          </div>
-          <span class="severity high">High</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-36')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Network failures happen. Phones go through tunnels. Wifi drops. Silent failures are maddening — users don't know if their action succeeded or failed.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Catch errors and show clear error messages</li>
-                  <li>Offer retry buttons for failed requests</li>
-                  <li>Auto-save form progress to localStorage</li>
-                  <li>Detect offline state and inform users</li>
-                  <li>Queue actions for retry when connection returns</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag moderate">🔧 Moderate — 2-4 hours</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="item ux" id="mistake-37">
-        <div class="item-header" onclick="toggleItem(this)">
-          <div class="item-number">37</div>
-          <div class="item-main">
-            <div class="item-problem">No mobile responsiveness</div>
-            <div class="item-consequence">Half your traffic <strong>bounces immediately</strong></div>
-          </div>
-          <span class="severity critical">Critical</span>
-          <button class="item-link" onclick="event.stopPropagation(); copyLink('mistake-37')" title="Copy link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </button>
-          <div class="item-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="item-details">
-          <div class="item-details-inner">
-            <div class="detail-section">
-              <div class="detail-label">Why this matters</div>
-              <div class="detail-content">Over 50% of web traffic is mobile. A desktop-only layout means horizontal scrolling, tiny tap targets, and users leaving for a competitor that works on their phone.</div>
-            </div>
-            <div class="detail-section">
-              <div class="detail-label">The fix</div>
-              <div class="detail-content">
-                <ul>
-                  <li>Design mobile-first, then scale up</li>
-                  <li>Use responsive breakpoints (Tailwind, media queries)</li>
-                  <li>Test on real devices, not just browser DevTools</li>
-                  <li>Ensure tap targets are at least 44x44px</li>
-                  <li>Simplify navigation for small screens</li>
-                </ul>
-              </div>
-            </div>
-            <div class="fix-tag involved">🔨 Involved — Varies by scope</div>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-</div>
-
-<footer class="site-footer">
-  <div class="footer-accent"></div>
-  <div class="footer-inner">
-    
-    <p class="footer-quote">"Ship fast, but not recklessly."</p>
-    
-    <div class="footer-actions">
-      <button class="footer-btn" onclick="copyPageLink()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-        Copy link
+  <!-- Nav -->
+  <nav>
+    <a class="nav-logo" href="/">
+      <svg class="nav-logo-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="12" fill="#1a1a1a"/><path d="M32 12 L56 52 L8 52 Z" fill="none" stroke="#ffb347" stroke-width="3" stroke-linejoin="round"/><text x="32" y="44" fill="#ffb347" font-family="ui-monospace,monospace" font-size="14" font-weight="600" text-anchor="middle">&lt;/&gt;</text></svg>
+      <div class="nav-logo-text">shipwrecks</div>
+    </a>
+    <div class="nav-right">
+      <button class="nav-btn" onclick="openSearch()" aria-label="Search" title="Search">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
       </button>
-      <a href="https://twitter.com/intent/tweet?text=37%20Mistakes%20Vibe%20Coders%20Ship%20to%20Production%20%E2%80%94%20the%20code%20review%20your%20AI%20never%20gave%20you&url=https%3A%2F%2Fshipwrecksbyai.vercel.app" class="footer-btn" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        Post on X
-      </a>
-      <button class="footer-btn" onclick="openDownloadModal()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-        Download checklist
+      <div class="text-size-toggle">
+        <button class="nav-btn text-sz" onclick="document.getElementById('tsd').classList.toggle('open')" aria-label="Text size">Aa</button>
+        <div class="text-size-dropdown" id="tsd">
+          <button class="ts-opt" onclick="setSize('small')">Small</button>
+          <button class="ts-opt active" onclick="setSize('medium')">Medium</button>
+          <button class="ts-opt" onclick="setSize('large')">Large</button>
+        </div>
+      </div>
+      <button class="nav-btn theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>
+        <svg class="icon-moon" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
       </button>
     </div>
-    
-    <div class="footer-divider"></div>
-    
-    <div class="footer-bottom">
-      <img src="avatar.jpg" alt="TRIP" class="footer-avatar">
-      <div class="footer-author-info">
-        <span class="footer-author-name">TRIP</span>
-        <p class="footer-author-bio">Designer & developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don't make the mistakes above.</p>
+  </nav>
+
+  <!-- Search overlay -->
+  <div class="search-overlay" id="searchOverlay" onclick="if(event.target===this)closeSearch()">
+    <div class="search-modal">
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+        <input class="search-input" id="searchInput" type="text" placeholder="Search mistakes, pages..." autocomplete="off">
+        <span class="search-esc" onclick="closeSearch()">esc</span>
       </div>
-      <a href="https://twitter.com/WLXAJ" class="footer-follow" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        Follow
-      </a>
+      <div class="search-results" id="searchResults"></div>
     </div>
-    
   </div>
-</footer>
 
-<button class="back-to-top" id="backToTop" aria-label="Back to top">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="18 15 12 9 6 15"></polyline>
-  </svg>
-</button>
+  <!-- Page content -->
+  <div class="hub-container">
 
-<nav class="mobile-nav">
-  <a href="#security" class="mobile-nav-link security active" data-section="security">
-    <span class="nav-icon">🔓</span>
-    <span class="nav-label">Security</span>
-  </a>
-  <a href="#infra" class="mobile-nav-link infra" data-section="infra">
-    <span class="nav-icon">⚡</span>
-    <span class="nav-label">Infra</span>
-  </a>
-  <a href="#data" class="mobile-nav-link data" data-section="data">
-    <span class="nav-icon">💾</span>
-    <span class="nav-label">Data</span>
-  </a>
-  <a href="#code" class="mobile-nav-link code" data-section="code">
-    <span class="nav-icon">⚙️</span>
-    <span class="nav-label">Code</span>
-  </a>
-  <a href="#ux" class="mobile-nav-link ux" data-section="ux">
-    <span class="nav-icon">👁</span>
-    <span class="nav-label">UX</span>
-  </a>
-</nav>
-
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-  <span id="toastMessage">Copied!</span>
-</div>
-
-<div class="modal-overlay" id="downloadModal">
-  <div class="modal">
-    <h3 class="modal-title">Download Checklist</h3>
-    <p class="modal-desc">Get a printable todo list to use while vibe coding.</p>
-    <div class="modal-options">
-      <button class="modal-option" onclick="downloadChecklist('md')">
-        <div class="modal-option-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-        </div>
-        <div class="modal-option-text">
-          <div class="modal-option-title">Markdown (.md)</div>
-          <div class="modal-option-subtitle">For Notion, Obsidian, GitHub</div>
-        </div>
-      </button>
-      <button class="modal-option" onclick="downloadChecklist('txt')">
-        <div class="modal-option-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-        </div>
-        <div class="modal-option-text">
-          <div class="modal-option-title">Plain Text (.txt)</div>
-          <div class="modal-option-subtitle">Universal, works anywhere</div>
-        </div>
-      </button>
-      <button class="modal-option" onclick="downloadChecklist('pdf')">
-        <div class="modal-option-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15h6"></path><path d="M9 11h6"></path></svg>
-        </div>
-        <div class="modal-option-text">
-          <div class="modal-option-title">PDF</div>
-          <div class="modal-option-subtitle">Print-ready document</div>
-        </div>
-      </button>
+    <div class="hero">
+      <div class="hero-badge">The production checklist your AI forgot</div>
+      <div class="hero-carousel" id="heroCarousel"></div>
+      <p class="hero-subtitle">37 critical mistakes vibe coders ship to production. Audit your codebase, score yourself against the list, and learn how to actually fix what's broken.</p>
+      <a class="btn-primary" href="/mistakes.html">Browse all 37 mistakes →</a>
+      <div class="hero-dots" id="heroDots"></div>
     </div>
-    <button class="modal-close" onclick="closeDownloadModal()">Cancel</button>
+
+    <div class="sections">
+      <div class="sections-header">
+        <span class="sections-title">Explore</span>
+        <div class="sections-pager" id="pager"></div>
+      </div>
+      <div class="sections-grid" id="sectionsGrid"></div>
+    </div>
+
+    <div class="about">
+      <h2 class="about-title">What is Shipwrecks?</h2>
+      <p>If you're building with AI — Cursor, Copilot, Claude, ChatGPT — the code gets written fast. But fast doesn't mean safe. Your AI assistant doesn't flag missing auth, skipped error handling, or zero monitoring. It builds what you ask for and moves on.</p>
+      <p>Shipwrecks is the checklist for the gaps AI leaves behind. 37 mistakes across security, performance, code quality, DevOps, and UX that actually break production apps. Not theoretical. Not edge cases. The stuff that wakes you up at 3am.</p>
+    </div>
+
+    <div class="nl">
+      <div class="nl-title">Stay in the loop</div>
+      <div class="nl-desc">New mistakes, horror stories, and fixes. No spam, no fluff.</div>
+      <form class="nl-form" id="nlForm" onsubmit="return handleNL(event)">
+        <input class="nl-input" id="nlEmail" type="email" placeholder="you@email.com" required>
+        <button class="nl-btn" type="submit">Subscribe</button>
+      </form>
+      <div class="nl-msg" id="nlMsg"></div>
+    </div>
+
   </div>
-</div>
 
-<script>
-  // ═══════════ TOAST ═══════════
-  function showToast(message) {
-    const toast = document.getElementById('toast');
-    const toastMessage = document.getElementById('toastMessage');
-    toastMessage.textContent = message;
-    toast.classList.add('visible');
-    setTimeout(() => toast.classList.remove('visible'), 2500);
-  }
-
-  // ═══════════ COPY LINK ═══════════
-  function copyLink(id) {
-    const url = window.location.origin + window.location.pathname + '#' + id;
-    navigator.clipboard.writeText(url).then(() => {
-      showToast('Link copied!');
-    });
-  }
-  
-  function copyPageLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      showToast('Page link copied!');
-    });
-  }
-
-  // ═══════════ THEME TOGGLE ═══════════
-  const html = document.documentElement;
-  const themeToggle = document.getElementById('themeToggle');
-  
-  // Check for saved preference or system preference
-  const savedTheme = localStorage.getItem('theme');
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  if (savedTheme) {
-    html.dataset.theme = savedTheme;
-  } else if (!systemPrefersDark) {
-    html.dataset.theme = 'light';
-  }
-  
-  themeToggle.addEventListener('click', () => {
-    const newTheme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-    html.dataset.theme = newTheme;
-    localStorage.setItem('theme', newTheme);
-  });
-
-  // ═══════════ PROGRESS BAR ═══════════
-  const progressBar = document.getElementById('progressBar');
-  
-  function updateProgress() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = (scrollTop / docHeight) * 100;
-    progressBar.style.width = `${progress}%`;
-  }
-  
-  window.addEventListener('scroll', updateProgress, { passive: true });
-
-  // ═══════════ BACK TO TOP ═══════════
-  const backToTop = document.getElementById('backToTop');
-  
-  function toggleBackToTop() {
-    if (window.scrollY > 400) {
-      backToTop.classList.add('visible');
-    } else {
-      backToTop.classList.remove('visible');
-    }
-  }
-  
-  window.addEventListener('scroll', toggleBackToTop, { passive: true });
-  
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // ═══════════ ITEM EXPAND/COLLAPSE ═══════════
-  function toggleItem(header) {
-    const item = header.closest('.item');
-    item.classList.toggle('expanded');
-  }
-
-  // ═══════════ INTERSECTION OBSERVER FOR ANIMATIONS ═══════════
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const items = entry.target.querySelectorAll('.item');
-        items.forEach((item, i) => {
-          item.style.animationDelay = `${i * 0.07}s`;
-          item.classList.add('visible');
-        });
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.05 });
-
-  document.querySelectorAll('.items').forEach(group => observer.observe(group));
-
-  // ═══════════ ACTIVE NAV LINK ON SCROLL ═══════════
-  const sections = document.querySelectorAll('.section');
-  const navLinks = document.querySelectorAll('.nav-link');
-  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-
-  const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        // Update desktop nav
-        navLinks.forEach(link => link.classList.remove('active'));
-        const activeLink = document.querySelector(`.nav-link[data-section="${id}"]`);
-        if (activeLink) activeLink.classList.add('active');
-        // Update mobile nav
-        mobileNavLinks.forEach(link => link.classList.remove('active'));
-        const activeMobileLink = document.querySelector(`.mobile-nav-link[data-section="${id}"]`);
-        if (activeMobileLink) activeMobileLink.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-25% 0px -65% 0px' });
-
-  sections.forEach(section => navObserver.observe(section));
-
-  // ═══════════ DEEP LINK HANDLING ═══════════
-  function handleDeepLink() {
-    const hash = window.location.hash;
-    if (hash && hash.startsWith('#mistake-')) {
-      const item = document.querySelector(hash);
-      if (item) {
-        // Wait for page to render, then expand and scroll
-        setTimeout(() => {
-          item.classList.add('expanded');
-          item.classList.add('visible');
-          item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-      }
-    }
-  }
-  
-  // Handle on page load
-  handleDeepLink();
-  
-  // Handle if hash changes while on page
-  window.addEventListener('hashchange', handleDeepLink);
-
-  // ═══════════ KEYBOARD NAVIGATION ═══════════
-  document.addEventListener('keydown', (e) => {
-    // Escape to close expanded items
-    if (e.key === 'Escape') {
-      document.querySelectorAll('.item.expanded').forEach(item => {
-        item.classList.remove('expanded');
-      });
-      closeDownloadModal();
-      document.getElementById('textSizeDropdown').classList.remove('open');
-    }
-  });
-
-  // ═══════════ TEXT SIZE TOGGLE ═══════════
-  const textSizeBtn = document.getElementById('textSizeBtn');
-  const textSizeDropdown = document.getElementById('textSizeDropdown');
-  const textSizeOptions = document.querySelectorAll('.text-size-option');
-
-  // Load saved text size
-  const savedTextSize = localStorage.getItem('textSize') || 'medium';
-  document.documentElement.setAttribute('data-text-size', savedTextSize);
-  textSizeOptions.forEach(opt => {
-    opt.classList.toggle('active', opt.dataset.size === savedTextSize);
-  });
-
-  textSizeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    textSizeDropdown.classList.toggle('open');
-  });
-
-  textSizeOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      const size = option.dataset.size;
-      document.documentElement.setAttribute('data-text-size', size);
-      localStorage.setItem('textSize', size);
-      textSizeOptions.forEach(opt => opt.classList.remove('active'));
-      option.classList.add('active');
-      textSizeDropdown.classList.remove('open');
-    });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.text-size-toggle')) {
-      textSizeDropdown.classList.remove('open');
-    }
-  });
-
-  // ═══════════ DOWNLOAD MODAL ═══════════
-  function openDownloadModal() {
-    document.getElementById('downloadModal').classList.add('open');
-  }
-
-  function closeDownloadModal() {
-    document.getElementById('downloadModal').classList.remove('open');
-  }
-
-  document.getElementById('downloadModal').addEventListener('click', (e) => {
-    if (e.target.classList.contains('modal-overlay')) {
-      closeDownloadModal();
-    }
-  });
-
-  // ═══════════ CHECKLIST GENERATION ═══════════
-  function getChecklistData() {
-    const sections = [];
-    document.querySelectorAll('.section').forEach(section => {
-      const title = section.querySelector('.section-title').textContent.trim();
-      const items = [];
-      section.querySelectorAll('.item').forEach(item => {
-        const num = item.querySelector('.item-number').textContent.trim();
-        const name = item.querySelector('.item-problem').textContent.trim();
-        const desc = item.querySelector('.item-consequence').textContent.trim();
-        items.push({ num, name, desc });
-      });
-      sections.push({ title, items });
-    });
-    return sections;
-  }
-
-  function generateMarkdown(sections) {
-    let md = `# 🚢 37 Mistakes Vibe Coders Ship to Production
-
-> **The code review your AI never gave you.**
-> 
-> Use this checklist before every deploy. Your future self will thank you.
-
----
-
-`;
-    const icons = { 'Security': '🔐', 'Infra': '⚡', 'Data': '💾', 'Code Quality': '⚙️', 'UX': '👁️' };
-    sections.forEach(section => {
-      const icon = icons[section.title] || '📋';
-      md += `## ${icon} ${section.title}\n\n`;
-      section.items.forEach(item => {
-        md += `- [ ] **${item.num}. ${item.name}**\n`;
-        md += `      _${item.desc}_\n\n`;
-      });
-      md += `---\n\n`;
-    });
-    md += `### ✅ Pre-Deploy Ritual
-
-1. Run through this checklist
-2. Fix any unchecked items
-3. Ship with confidence
-
----
-
-_Generated from [shipwrecksbyai.vercel.app](https://shipwrecksbyai.vercel.app) • Share with your team_
-`;
-    return md;
-  }
-
-  function generatePlainText(sections) {
-    let txt = `
-╔═══════════════════════════════════════════════════════════════╗
-║                                                               ║
-║   37 MISTAKES VIBE CODERS SHIP TO PRODUCTION                  ║
-║   ─────────────────────────────────────────                   ║
-║   The code review your AI never gave you.                     ║
-║                                                               ║
-╚═══════════════════════════════════════════════════════════════╝
-
-Use this checklist before every deploy.
-
-`;
-    const symbols = { 'Security': '[!]', 'Infra': '[~]', 'Data': '[D]', 'Code Quality': '[C]', 'UX': '[U]' };
-    sections.forEach(section => {
-      const sym = symbols[section.title] || '[*]';
-      txt += `\n${'═'.repeat(50)}\n`;
-      txt += `${sym} ${section.title.toUpperCase()}\n`;
-      txt += `${'─'.repeat(50)}\n\n`;
-      section.items.forEach(item => {
-        txt += `[ ] ${item.num}. ${item.name}\n`;
-        txt += `    └─ ${item.desc}\n\n`;
-      });
-    });
-    txt += `
-${'═'.repeat(50)}
-PRE-DEPLOY RITUAL
-${'─'.repeat(50)}
-
-  1. Run through this checklist
-  2. Fix any unchecked items  
-  3. Ship with confidence
-
-${'═'.repeat(50)}
-
-Source: shipwrecksbyai.vercel.app
-Share with your team!
-`;
-    return txt;
-  }
-
-  function generatePDFContent(sections) {
-    const colors = { 
-      'Security': '#e53935', 
-      'Infra': '#ef8c00', 
-      'Data': '#0288d1', 
-      'Code Quality': '#388e3c', 
-      'UX': '#7b1fa2' 
-    };
-    let html = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>37 Mistakes Vibe Coders Ship to Production</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
-  
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body { 
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; 
-    max-width: 800px; 
-    margin: 0 auto; 
-    padding: 0; 
-    color: #1a1a1a;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  
-  .header {
-    padding: 40px 40px 32px;
-    position: relative;
-  }
-  
-  .rainbow-bar {
-    height: 4px;
-    background: linear-gradient(90deg, #e53935, #ef8c00, #0288d1, #388e3c, #7b1fa2);
-    margin-bottom: 32px;
-  }
-  
-  .logo {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: #999;
-    margin-bottom: 16px;
-  }
-  
-  .logo span { color: #e53935; }
-  
-  h1 { 
-    font-size: 28px; 
-    font-weight: 600;
-    margin-bottom: 8px;
-    letter-spacing: -0.5px;
-  }
-  
-  .subtitle { 
-    color: #666; 
-    font-size: 15px;
-    margin-bottom: 8px;
-  }
-  
-  .meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: #999;
-    margin-top: 16px;
-  }
-  
-  .content {
-    padding: 0 40px 40px;
-  }
-  
-  .section {
-    margin-bottom: 32px;
-    page-break-inside: avoid;
-  }
-  
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #eee;
-  }
-  
-  .section-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: white;
-    font-weight: 600;
-  }
-  
-  .section-title {
-    font-size: 16px;
-    font-weight: 600;
-  }
-  
-  .section-count {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: #999;
-    margin-left: auto;
-  }
-  
-  .item { 
-    display: flex; 
-    gap: 12px; 
-    margin-bottom: 14px; 
-    page-break-inside: avoid;
-  }
-  
-  .checkbox { 
-    width: 18px; 
-    height: 18px; 
-    border: 2px solid #ccc; 
-    border-radius: 4px; 
-    flex-shrink: 0; 
-    margin-top: 1px;
-  }
-  
-  .item-content { flex: 1; }
-  
-  .item-title { 
-    font-weight: 600; 
-    font-size: 13px;
-    margin-bottom: 2px;
-  }
-  
-  .item-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: #999;
-    margin-right: 6px;
-  }
-  
-  .item-desc { 
-    color: #666; 
-    font-size: 12px;
-  }
-  
-  .footer { 
-    margin-top: 40px;
-    padding: 24px 40px;
-    background: #f8f8f8;
-    border-top: 1px solid #eee;
-  }
-  
-  .footer-title {
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 12px;
-  }
-  
-  .footer-steps {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .footer-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: #666;
-  }
-  
-  .step-num {
-    width: 20px;
-    height: 20px;
-    background: #1a1a1a;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  
-  .footer-source {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: #999;
-  }
-  
-  @media print {
-    body { padding: 0; }
-    .section { page-break-inside: avoid; }
-    .item { page-break-inside: avoid; }
-  }
-</style>
-</head>
-<body>
-
-<div class="header">
-  <div class="rainbow-bar"></div>
-  <div class="logo"><span>//</span> SHIPWRECKS</div>
-  <h1>37 Mistakes Vibe Coders Ship to Production</h1>
-  <p class="subtitle">The code review your AI never gave you.</p>
-  <p class="meta">Use this checklist before every deploy.</p>
-</div>
-
-<div class="content">
-`;
-    const icons = { 'Security': '🔐', 'Infra': '⚡', 'Data': '💾', 'Code Quality': '⚙️', 'UX': '👁️' };
-    sections.forEach(section => {
-      const color = colors[section.title] || '#666';
-      const icon = icons[section.title] || '📋';
-      html += `
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon" style="background: ${color}">${section.items.length}</div>
-      <div class="section-title">${section.title}</div>
-      <div class="section-count">${section.items.length} items</div>
-    </div>
-`;
-      section.items.forEach(item => {
-        html += `    <div class="item">
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-title"><span class="item-num">${item.num}</span>${item.name}</div>
-        <div class="item-desc">${item.desc}</div>
+  <!-- Footer (hardcoded, not JS-rendered) -->
+  <footer class="site-footer">
+    <div class="footer-accent"></div>
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <div class="footer-avatar-wrap">
+          <img src="/avatar.jpg" alt="TRIP" class="footer-avatar" onerror="this.parentElement.innerHTML='<div class=\'footer-avatar footer-avatar-fallback\'>T</div>'">
+        </div>
+        <div class="footer-author-info">
+          <span class="footer-author-name">TRIP</span>
+          <p class="footer-author-bio">Designer &amp; developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don't make the mistakes above.</p>
+        </div>
+        <a href="https://twitter.com/WLXAJ" class="footer-follow" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Follow
+        </a>
       </div>
     </div>
-`;
-      });
-      html += `  </div>
-`;
+  </footer>
+
+  <script>
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Content Registry
+   Single source of truth for all pages.
+   Adding a new page = adding one entry.
+   ═══════════════════════════════════════ */
+
+const SITE = {
+  name: 'Shipwrecks',
+  url: 'https://shipwrecksbyai.vercel.app',
+  author: {
+    name: 'TRIP',
+    handle: '@WLXAJ',
+    bio: 'Designer & developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don\'t make the mistakes above.',
+    avatar: '/avatar.jpg',
+    twitter: 'https://twitter.com/WLXAJ'
+  }
+};
+
+/* Tag types with colors */
+const TAG_TYPES = {
+  tool:      { label: 'Tool',      icon: '🔧', color: 'amber'  },
+  read:      { label: 'Read',      icon: '📖', color: 'blue'   },
+  community: { label: 'Community', icon: '💬', color: 'green'  },
+  guide:     { label: 'Guide',     icon: '📚', color: 'purple' },
+};
+
+/* Content pages — order matters for pagination */
+const PAGES = [
+  {
+    id: 'mistakes',
+    title: '37 Mistakes',
+    desc: 'Security, performance, code quality, DevOps, and UX — the full production checklist.',
+    type: 'read',
+    url: '/mistakes.html',
+    status: 'live',
+    icon: '📋',
+    added: '2025-06-01'
+  },
+  {
+    id: 'score',
+    title: 'Shipwreck Score',
+    desc: 'Quiz your codebase. Get scored, get roasted, share the wreckage.',
+    type: 'tool',
+    url: '/score.html',
+    status: 'live',
+    icon: '🔥',
+    added: '2025-06-15'
+  },
+  {
+    id: 'resources',
+    title: 'Resources',
+    desc: 'How to actually fix each mistake. Guides, tools, and code snippets.',
+    type: 'guide',
+    url: '#',
+    status: 'soon',
+    icon: '🛠️',
+    added: '2025-07-01'
+  },
+  {
+    id: 'community',
+    title: 'Community',
+    desc: 'Submit a mistake. Vote on what\'s worst. Share your horror stories.',
+    type: 'community',
+    url: '#',
+    status: 'soon',
+    icon: '💬',
+    added: '2025-07-01'
+  }
+];
+
+/* Search index — mistakes data for the search overlay */
+const MISTAKES_INDEX = [
+  { id: 1,  title: 'Auth tokens in localStorage', cat: 'Security', url: '/mistakes.html#mistake-1' },
+  { id: 2,  title: 'No input sanitisation', cat: 'Security', url: '/mistakes.html#mistake-2' },
+  { id: 3,  title: 'Hardcoded API keys', cat: 'Security', url: '/mistakes.html#mistake-3' },
+  { id: 4,  title: 'No Stripe webhook verification', cat: 'Security', url: '/mistakes.html#mistake-4' },
+  { id: 5,  title: 'Sessions that never expire', cat: 'Security', url: '/mistakes.html#mistake-5' },
+  { id: 6,  title: 'Password reset links don\'t expire', cat: 'Security', url: '/mistakes.html#mistake-6' },
+  { id: 7,  title: 'No CORS policy', cat: 'Security', url: '/mistakes.html#mistake-7' },
+  { id: 8,  title: 'Admin routes with no role checks', cat: 'Security', url: '/mistakes.html#mistake-8' },
+  { id: 9,  title: 'No CSRF protection', cat: 'Security', url: '/mistakes.html#mistake-9' },
+  { id: 10, title: 'Secrets committed to git', cat: 'Security', url: '/mistakes.html#mistake-10' },
+  { id: 11, title: 'No Content Security Policy', cat: 'Security', url: '/mistakes.html#mistake-11' },
+  { id: 12, title: 'No rate limiting', cat: 'Infra', url: '/mistakes.html#mistake-12' },
+  { id: 13, title: 'No database connection pooling', cat: 'Infra', url: '/mistakes.html#mistake-13' },
+  { id: 14, title: 'Images uploaded to server', cat: 'Infra', url: '/mistakes.html#mistake-14' },
+  { id: 15, title: 'Emails sent synchronously', cat: 'Infra', url: '/mistakes.html#mistake-15' },
+  { id: 16, title: 'No health check endpoint', cat: 'Infra', url: '/mistakes.html#mistake-16' },
+  { id: 17, title: 'No logging in production', cat: 'Infra', url: '/mistakes.html#mistake-17' },
+  { id: 18, title: 'No env variable validation', cat: 'Infra', url: '/mistakes.html#mistake-18' },
+  { id: 19, title: 'No graceful shutdown', cat: 'Infra', url: '/mistakes.html#mistake-19' },
+  { id: 20, title: 'No retry logic with backoff', cat: 'Infra', url: '/mistakes.html#mistake-20' },
+  { id: 21, title: 'No request timeout', cat: 'Infra', url: '/mistakes.html#mistake-21' },
+  { id: 22, title: 'No database indexing', cat: 'Data', url: '/mistakes.html#mistake-22' },
+  { id: 23, title: 'No database migrations', cat: 'Data', url: '/mistakes.html#mistake-23' },
+  { id: 24, title: 'No soft deletes', cat: 'Data', url: '/mistakes.html#mistake-24' },
+  { id: 25, title: 'No pagination on queries', cat: 'Data', url: '/mistakes.html#mistake-25' },
+  { id: 26, title: 'No database backups', cat: 'Data', url: '/mistakes.html#mistake-26' },
+  { id: 27, title: 'User data not encrypted at rest', cat: 'Data', url: '/mistakes.html#mistake-27' },
+  { id: 28, title: 'No lint or format enforcement', cat: 'Code', url: '/mistakes.html#mistake-28' },
+  { id: 29, title: 'No error boundaries', cat: 'Code', url: '/mistakes.html#mistake-29' },
+  { id: 30, title: 'Console.log in production', cat: 'Code', url: '/mistakes.html#mistake-30' },
+  { id: 31, title: 'No TypeScript or schema validation', cat: 'Code', url: '/mistakes.html#mistake-31' },
+  { id: 32, title: 'No tests at all', cat: 'Code', url: '/mistakes.html#mistake-32' },
+  { id: 33, title: 'Git history is one commit', cat: 'Code', url: '/mistakes.html#mistake-33' },
+  { id: 34, title: 'Dead code everywhere', cat: 'Code', url: '/mistakes.html#mistake-34' },
+  { id: 35, title: 'No loading or empty states', cat: 'UX', url: '/mistakes.html#mistake-35' },
+  { id: 36, title: 'No mobile responsiveness', cat: 'UX', url: '/mistakes.html#mistake-36' },
+  { id: 37, title: 'No error messages for users', cat: 'UX', url: '/mistakes.html#mistake-37' },
+];
+
+/* Category → color mapping for search icons */
+const CAT_COLORS = {
+  'Security': 'red',
+  'Infra':    'amber',
+  'Data':     'blue',
+  'Code':     'green',
+  'UX':       'purple'
+};
+
+/* Category → icon mapping */
+const CAT_ICONS = {
+  'Security': '🔒',
+  'Infra':    '⚡',
+  'Data':     '💾',
+  'Code':     '🧹',
+  'UX':       '🎨'
+};
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Theme & Text Size
+   ═══════════════════════════════════════ */
+
+function toggleTheme() {
+  const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem('sw-theme', t); } catch(e) {}
+}
+
+function setSize(s) {
+  document.documentElement.dataset.textSize = s;
+  document.querySelectorAll('.ts-opt').forEach(b =>
+    b.classList.toggle('active', b.textContent.toLowerCase() === s)
+  );
+  const dd = document.getElementById('tsd');
+  if (dd) dd.classList.remove('open');
+  try { localStorage.setItem('sw-size', s); } catch(e) {}
+}
+
+/* Restore on load */
+(function() {
+  try {
+    const t = localStorage.getItem('sw-theme');
+    if (t) document.documentElement.dataset.theme = t;
+    const s = localStorage.getItem('sw-size');
+    if (s) setSize(s);
+  } catch(e) {}
+})();
+
+/* Close text size dropdown on outside click */
+document.addEventListener('click', e => {
+  if (!e.target.closest('.text-size-toggle')) {
+    const dd = document.getElementById('tsd');
+    if (dd) dd.classList.remove('open');
+  }
+});
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Search (Cmd+K overlay)
+   Reads from registry.js (PAGES, MISTAKES_INDEX)
+   ═══════════════════════════════════════ */
+
+let _searchFocusIdx = -1;
+
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('open');
+  const inp = document.getElementById('searchInput');
+  inp.value = '';
+  inp.focus();
+  renderSearch('');
+  _searchFocusIdx = -1;
+}
+
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+
+/* Keyboard: Cmd+K to open, Esc to close, arrows + enter to navigate */
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openSearch();
+    return;
+  }
+  if (e.key === 'Escape' && document.getElementById('searchOverlay').classList.contains('open')) {
+    closeSearch();
+    return;
+  }
+  if (!document.getElementById('searchOverlay').classList.contains('open')) return;
+
+  const items = document.querySelectorAll('.sr-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _searchFocusIdx = Math.min(_searchFocusIdx + 1, items.length - 1);
+    _updateSearchFocus(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _searchFocusIdx = Math.max(_searchFocusIdx - 1, 0);
+    _updateSearchFocus(items);
+  } else if (e.key === 'Enter' && _searchFocusIdx >= 0 && items[_searchFocusIdx]) {
+    items[_searchFocusIdx].click();
+  }
+});
+
+function _updateSearchFocus(items) {
+  items.forEach((it, i) => it.classList.toggle('focused', i === _searchFocusIdx));
+  if (items[_searchFocusIdx]) items[_searchFocusIdx].scrollIntoView({ block: 'nearest' });
+}
+
+/* Input listener — bind after DOM is ready (scripts at bottom of body) */
+const _searchInp = document.getElementById('searchInput');
+if (_searchInp) _searchInp.addEventListener('input', e => renderSearch(e.target.value));
+
+function renderSearch(q) {
+  const r = document.getElementById('searchResults');
+  if (!r) return;
+  q = q.toLowerCase().trim();
+
+  if (!q) {
+    r.innerHTML = '<div class="search-empty">Type to search pages, mistakes...</div>';
+    _searchFocusIdx = -1;
+    return;
+  }
+
+  /* Search pages from registry */
+  const pageMatches = PAGES.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    p.desc.toLowerCase().includes(q) ||
+    p.type.toLowerCase().includes(q)
+  );
+
+  /* Search mistakes from registry */
+  const mistakeMatches = MISTAKES_INDEX.filter(m =>
+    m.title.toLowerCase().includes(q) ||
+    m.cat.toLowerCase().includes(q)
+  );
+
+  if (!pageMatches.length && !mistakeMatches.length) {
+    r.innerHTML = '<div class="search-empty">No results found</div>';
+    _searchFocusIdx = -1;
+    return;
+  }
+
+  let h = '';
+
+  if (pageMatches.length) {
+    h += '<div class="sr-group">Pages</div>';
+    pageMatches.forEach(p => {
+      const tag = TAG_TYPES[p.type] || {};
+      const colorCls = tag.color || 'muted';
+      h += `<a class="sr-item" href="${p.url}">
+        <div class="sr-icon ${colorCls}">${p.icon}</div>
+        <div class="sr-meta">
+          <div class="sr-title">${_hl(p.title, q)}</div>
+          <div class="sr-sub">${tag.label || p.type} · ${p.desc}</div>
+        </div>
+        <span class="sr-arrow">→</span>
+      </a>`;
     });
-    html += `</div>
-
-<div class="footer">
-  <div class="footer-title">✅ Pre-Deploy Ritual</div>
-  <div class="footer-steps">
-    <div class="footer-step"><span class="step-num">1</span> Run through checklist</div>
-    <div class="footer-step"><span class="step-num">2</span> Fix unchecked items</div>
-    <div class="footer-step"><span class="step-num">3</span> Ship with confidence</div>
-  </div>
-  <div class="footer-source">shipwrecksbyai.vercel.app • Share with your team</div>
-</div>
-
-</body>
-</html>`;
-    return html;
   }
 
-  function downloadChecklist(format) {
-    const sections = getChecklistData();
-    let content, filename, type;
-
-    if (format === 'md') {
-      content = generateMarkdown(sections);
-      filename = 'vibe-coding-checklist.md';
-      type = 'text/markdown';
-    } else if (format === 'txt') {
-      content = generatePlainText(sections);
-      filename = 'vibe-coding-checklist.txt';
-      type = 'text/plain';
-    } else if (format === 'pdf') {
-      // Open print dialog with styled content
-      const pdfContent = generatePDFContent(sections);
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(pdfContent);
-      printWindow.document.close();
-      printWindow.onload = function() {
-        printWindow.print();
-      };
-      closeDownloadModal();
-      showToast('Print dialog opened!');
-      return;
-    }
-
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    closeDownloadModal();
-    showToast(`Downloaded ${filename}`);
+  if (mistakeMatches.length) {
+    h += '<div class="sr-group">Mistakes</div>';
+    mistakeMatches.forEach(m => {
+      const colorCls = CAT_COLORS[m.cat] || 'muted';
+      const icon = CAT_ICONS[m.cat] || '📋';
+      h += `<a class="sr-item" href="${m.url}">
+        <div class="sr-icon ${colorCls}">${icon}</div>
+        <div class="sr-meta">
+          <div class="sr-title">${_hl(m.title, q)}</div>
+          <div class="sr-sub">${m.cat}</div>
+        </div>
+        <span class="sr-arrow">→</span>
+      </a>`;
+    });
   }
-</script>
 
+  r.innerHTML = h;
+  _searchFocusIdx = -1;
+}
+
+/* Highlight matching text */
+function _hl(text, q) {
+  if (!q) return text;
+  const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return text.replace(re, '<strong style="color:var(--text-primary)">$1</strong>');
+}
+
+/* ═══ PAGE: HOMEPAGE ═══ */
+var PER_PAGE = 6;
+var currentPage = 0;
+
+var SLIDES = [
+  { title: 'The code review your <em>AI never gave you</em>' },
+  { title: 'Your codebase has <em>secrets it\'s not telling you</em>' },
+  { title: 'Ship fast, <em>wreck nothing</em>' },
+  { title: '37 ways to <em>sink your production app</em>' },
+  { title: 'Vibe coding is fun until <em>production catches fire</em>' }
+];
+
+function initCarousel() {
+  var c = document.getElementById('heroCarousel');
+  var d = document.getElementById('heroDots');
+  for (var i = 0; i < SLIDES.length; i++) {
+    var div = document.createElement('div');
+    div.className = 'hero-slide' + (i === 0 ? ' active' : '');
+    div.innerHTML = '<h1 class="hero-title">' + SLIDES[i].title + '</h1>';
+    c.appendChild(div);
+
+    var dot = document.createElement('div');
+    dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('onclick', 'goSlide(' + i + ')');
+    d.appendChild(dot);
+  }
+  goSlide(new Date().getDate() % SLIDES.length);
+}
+
+function goSlide(i) {
+  var slides = document.querySelectorAll('.hero-slide');
+  var dots = document.querySelectorAll('.hero-dot');
+  for (var j = 0; j < slides.length; j++) {
+    slides[j].classList.toggle('active', j === i);
+    dots[j].classList.toggle('active', j === i);
+  }
+}
+
+function renderSections() {
+  var grid = document.getElementById('sectionsGrid');
+  var pager = document.getElementById('pager');
+  var totalPages = Math.ceil(PAGES.length / PER_PAGE);
+  var start = currentPage * PER_PAGE;
+  var pageItems = PAGES.slice(start, start + PER_PAGE);
+  var h = '';
+
+  for (var i = 0; i < pageItems.length; i++) {
+    var p = pageItems[i];
+    var tag = TAG_TYPES[p.type] || {};
+    var isMuted = p.status === 'soon';
+    var tagEl = isMuted
+      ? '<span class="pill badge-muted">Coming soon</span>'
+      : '<span class="pill badge-' + tag.color + '">' + tag.icon + ' ' + tag.label + '</span>';
+    var el = isMuted ? 'div' : 'a';
+    var href = isMuted ? '' : ' href="' + p.url + '"';
+
+    h += '<' + el + ' class="sec-card' + (isMuted ? ' muted' : '') + '"' + href + '>'
+      + '<div class="sec-icon ' + tag.color + '">' + p.icon + '</div>'
+      + '<div class="sec-meta"><div class="sec-title">' + p.title + '</div><div class="sec-desc">' + p.desc + '</div></div>'
+      + tagEl
+      + '<span class="sec-arrow">\u2192</span>'
+      + '</' + el + '>';
+  }
+  grid.innerHTML = h;
+
+  if (totalPages <= 1) {
+    pager.innerHTML = '';
+  } else {
+    var endIdx = Math.min(start + PER_PAGE, PAGES.length);
+    pager.innerHTML = '<button class="pager-btn" onclick="prevPage()"' + (currentPage === 0 ? ' disabled' : '') + '><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></button>'
+      + '<span class="sections-pager-info">' + (start+1) + '\u2013' + endIdx + ' of ' + PAGES.length + '</span>'
+      + '<button class="pager-btn" onclick="nextPage()"' + (currentPage >= totalPages-1 ? ' disabled' : '') + '><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></button>';
+  }
+}
+
+function prevPage() { if (currentPage > 0) { currentPage--; renderSections(); } }
+function nextPage() { if (currentPage < Math.ceil(PAGES.length / PER_PAGE) - 1) { currentPage++; renderSections(); } }
+
+function handleNL(e) {
+  e.preventDefault();
+  var email = document.getElementById('nlEmail').value;
+  var msg = document.getElementById('nlMsg');
+  msg.className = 'nl-msg ok';
+  msg.textContent = "Thanks! We'll be in touch when we launch the newsletter.";
+  msg.style.display = 'block';
+  document.getElementById('nlEmail').value = '';
+  try { var subs = JSON.parse(localStorage.getItem('sw-nl-subs') || '[]'); subs.push({email:email,ts:Date.now()}); localStorage.setItem('sw-nl-subs', JSON.stringify(subs)); } catch(ex) {}
+  return false;
+}
+
+/**
+ * renderWhatsNext — shows contextual navigation cards.
+ * currentPageId: the id of the current page (from PAGES registry)
+ * maxCards: how many to show (default 3)
+ * Excludes the current page, prioritizes live pages, shows "coming soon" muted.
+ */
+function renderWhatsNext(currentPageId, maxCards) {
+  maxCards = maxCards || 3;
+  var el = document.getElementById('whatsNext');
+  if (!el) return;
+
+  // Filter out current page, prioritize live, then soon
+  var live = [];
+  var soon = [];
+  for (var i = 0; i < PAGES.length; i++) {
+    if (PAGES[i].id === currentPageId) continue;
+    if (PAGES[i].status === 'live') live.push(PAGES[i]);
+    else soon.push(PAGES[i]);
+  }
+
+  // Take up to maxCards, filling with live first then soon
+  var cards = live.concat(soon).slice(0, maxCards);
+  if (!cards.length) return;
+
+  var h = '<div class="whats-next-title">What\'s next</div><div class="whats-next-grid">';
+
+  for (var j = 0; j < cards.length; j++) {
+    var p = cards[j];
+    var tag = TAG_TYPES[p.type] || {};
+    var isMuted = p.status === 'soon';
+    var tagClass = isMuted ? 'badge-muted' : 'badge-' + tag.color;
+    var tagLabel = isMuted ? 'Coming soon' : tag.icon + ' ' + tag.label;
+    var elTag = isMuted ? 'div' : 'a';
+    var href = isMuted ? '' : ' href="' + p.url + '"';
+
+    h += '<' + elTag + ' class="wn-card' + (isMuted ? ' muted' : '') + '"' + href + '>'
+      + '<div class="wn-card-top">'
+      + '<div class="wn-card-icon ' + (tag.color || '') + '">' + p.icon + '</div>'
+      + '<span class="wn-card-tag pill ' + tagClass + '">' + tagLabel + '</span>'
+      + '</div>'
+      + '<div class="wn-card-title">' + p.title + '</div>'
+      + '<div class="wn-card-desc">' + p.desc + '</div>'
+      + '<div class="wn-card-arrow">\u2192</div>'
+      + '</' + elTag + '>';
+  }
+
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+/* INIT */
+initCarousel();
+renderSections();
+  </script>
 </body>
 </html>
