@@ -1209,7 +1209,7 @@
     .item-header .severity { display: none; }
     .item-details-inner { padding: 0 16px 16px 52px; }
     .back-to-top { bottom: 80px; right: 20px; width: 44px; height: 44px; }
-    .site-footer { padding: 32px 16px; }
+    .site-footer { padding: 32px 16px 90px; }
     .footer-accent { margin: -32px -16px 24px; }
     .footer-actions { flex-direction: column; }
     .footer-btn { justify-content: center; }
@@ -3010,71 +3010,327 @@
   }
 
   function generateMarkdown(sections) {
-    let md = '# 37 Mistakes Vibe Coders Ship to Production\n\n';
-    md += 'The code review your AI never gave you.\n\n---\n\n';
+    let md = `# 🚢 37 Mistakes Vibe Coders Ship to Production
+
+> **The code review your AI never gave you.**
+> 
+> Use this checklist before every deploy. Your future self will thank you.
+
+---
+
+`;
+    const icons = { 'Security': '🔐', 'Infra': '⚡', 'Data': '💾', 'Code Quality': '⚙️', 'UX': '👁️' };
     sections.forEach(section => {
-      md += `## ${section.title}\n\n`;
+      const icon = icons[section.title] || '📋';
+      md += `## ${icon} ${section.title}\n\n`;
       section.items.forEach(item => {
-        md += `- [ ] **${item.num}. ${item.name}** — ${item.desc}\n`;
+        md += `- [ ] **${item.num}. ${item.name}**\n`;
+        md += `      _${item.desc}_\n\n`;
       });
-      md += '\n';
+      md += `---\n\n`;
     });
-    md += '---\n\n*Source: shipwrecksbyai.vercel.app*\n';
+    md += `### ✅ Pre-Deploy Ritual
+
+1. Run through this checklist
+2. Fix any unchecked items
+3. Ship with confidence
+
+---
+
+_Generated from [shipwrecksbyai.vercel.app](https://shipwrecksbyai.vercel.app) • Share with your team_
+`;
     return md;
   }
 
   function generatePlainText(sections) {
-    let txt = '37 MISTAKES VIBE CODERS SHIP TO PRODUCTION\n';
-    txt += '==========================================\n\n';
-    txt += 'The code review your AI never gave you.\n\n';
+    let txt = `
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   37 MISTAKES VIBE CODERS SHIP TO PRODUCTION                  ║
+║   ─────────────────────────────────────────                   ║
+║   The code review your AI never gave you.                     ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Use this checklist before every deploy.
+
+`;
+    const symbols = { 'Security': '[!]', 'Infra': '[~]', 'Data': '[D]', 'Code Quality': '[C]', 'UX': '[U]' };
     sections.forEach(section => {
-      txt += `\n${section.title.toUpperCase()}\n`;
-      txt += '-'.repeat(section.title.length) + '\n\n';
+      const sym = symbols[section.title] || '[*]';
+      txt += `\n${'═'.repeat(50)}\n`;
+      txt += `${sym} ${section.title.toUpperCase()}\n`;
+      txt += `${'─'.repeat(50)}\n\n`;
       section.items.forEach(item => {
-        txt += `[ ] ${item.num}. ${item.name}\n    ${item.desc}\n\n`;
+        txt += `[ ] ${item.num}. ${item.name}\n`;
+        txt += `    └─ ${item.desc}\n\n`;
       });
     });
-    txt += '\n---\nSource: shipwrecksbyai.vercel.app\n';
+    txt += `
+${'═'.repeat(50)}
+PRE-DEPLOY RITUAL
+${'─'.repeat(50)}
+
+  1. Run through this checklist
+  2. Fix any unchecked items  
+  3. Ship with confidence
+
+${'═'.repeat(50)}
+
+Source: shipwrecksbyai.vercel.app
+Share with your team!
+`;
     return txt;
   }
 
   function generatePDFContent(sections) {
-    // Generate HTML for PDF
+    const colors = { 
+      'Security': '#e53935', 
+      'Infra': '#ef8c00', 
+      'Data': '#0288d1', 
+      'Code Quality': '#388e3c', 
+      'UX': '#7b1fa2' 
+    };
     let html = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>37 Mistakes Vibe Coders Ship to Production</title>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 700px; margin: 0 auto; padding: 40px 20px; color: #1a1a1a; }
-  h1 { font-size: 24px; margin-bottom: 8px; }
-  .subtitle { color: #666; margin-bottom: 32px; }
-  h2 { font-size: 16px; margin-top: 32px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
-  .item { display: flex; gap: 12px; margin-bottom: 12px; page-break-inside: avoid; }
-  .checkbox { width: 16px; height: 16px; border: 1.5px solid #999; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body { 
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; 
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding: 0; 
+    color: #1a1a1a;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .header {
+    padding: 40px 40px 32px;
+    position: relative;
+  }
+  
+  .rainbow-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #e53935, #ef8c00, #0288d1, #388e3c, #7b1fa2);
+    margin-bottom: 32px;
+  }
+  
+  .logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+  
+  .logo span { color: #e53935; }
+  
+  h1 { 
+    font-size: 28px; 
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  
+  .subtitle { 
+    color: #666; 
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  
+  .meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #999;
+    margin-top: 16px;
+  }
+  
+  .content {
+    padding: 0 40px 40px;
+  }
+  
+  .section {
+    margin-bottom: 32px;
+    page-break-inside: avoid;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+  
+  .section-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #999;
+    margin-left: auto;
+  }
+  
+  .item { 
+    display: flex; 
+    gap: 12px; 
+    margin-bottom: 14px; 
+    page-break-inside: avoid;
+  }
+  
+  .checkbox { 
+    width: 18px; 
+    height: 18px; 
+    border: 2px solid #ccc; 
+    border-radius: 4px; 
+    flex-shrink: 0; 
+    margin-top: 1px;
+  }
+  
   .item-content { flex: 1; }
-  .item-title { font-weight: 600; font-size: 14px; }
-  .item-desc { color: #666; font-size: 13px; margin-top: 2px; }
-  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #eee; color: #999; font-size: 12px; }
+  
+  .item-title { 
+    font-weight: 600; 
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  
+  .item-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #999;
+    margin-right: 6px;
+  }
+  
+  .item-desc { 
+    color: #666; 
+    font-size: 12px;
+  }
+  
+  .footer { 
+    margin-top: 40px;
+    padding: 24px 40px;
+    background: #f8f8f8;
+    border-top: 1px solid #eee;
+  }
+  
+  .footer-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .footer-steps {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .footer-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .step-num {
+    width: 20px;
+    height: 20px;
+    background: #1a1a1a;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  .footer-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #999;
+  }
+  
+  @media print {
+    body { padding: 0; }
+    .section { page-break-inside: avoid; }
+    .item { page-break-inside: avoid; }
+  }
 </style>
 </head>
 <body>
-<h1>37 Mistakes Vibe Coders Ship to Production</h1>
-<p class="subtitle">The code review your AI never gave you.</p>
+
+<div class="header">
+  <div class="rainbow-bar"></div>
+  <div class="logo"><span>//</span> SHIPWRECKS</div>
+  <h1>37 Mistakes Vibe Coders Ship to Production</h1>
+  <p class="subtitle">The code review your AI never gave you.</p>
+  <p class="meta">Use this checklist before every deploy.</p>
+</div>
+
+<div class="content">
 `;
+    const icons = { 'Security': '🔐', 'Infra': '⚡', 'Data': '💾', 'Code Quality': '⚙️', 'UX': '👁️' };
     sections.forEach(section => {
-      html += `<h2>${section.title}</h2>\n`;
+      const color = colors[section.title] || '#666';
+      const icon = icons[section.title] || '📋';
+      html += `
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background: ${color}">${section.items.length}</div>
+      <div class="section-title">${section.title}</div>
+      <div class="section-count">${section.items.length} items</div>
+    </div>
+`;
       section.items.forEach(item => {
-        html += `<div class="item">
-  <div class="checkbox"></div>
-  <div class="item-content">
-    <div class="item-title">${item.num}. ${item.name}</div>
-    <div class="item-desc">${item.desc}</div>
-  </div>
-</div>\n`;
+        html += `    <div class="item">
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-title"><span class="item-num">${item.num}</span>${item.name}</div>
+        <div class="item-desc">${item.desc}</div>
+      </div>
+    </div>
+`;
       });
+      html += `  </div>
+`;
     });
-    html += `<div class="footer">Source: shipwrecksbyai.vercel.app</div>
+    html += `</div>
+
+<div class="footer">
+  <div class="footer-title">✅ Pre-Deploy Ritual</div>
+  <div class="footer-steps">
+    <div class="footer-step"><span class="step-num">1</span> Run through checklist</div>
+    <div class="footer-step"><span class="step-num">2</span> Fix unchecked items</div>
+    <div class="footer-step"><span class="step-num">3</span> Ship with confidence</div>
+  </div>
+  <div class="footer-source">shipwrecksbyai.vercel.app • Share with your team</div>
+</div>
+
 </body>
 </html>`;
     return html;
