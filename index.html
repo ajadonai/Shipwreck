@@ -93,6 +93,7 @@
     position: relative;
     display: grid;
     grid-template-columns: auto 1fr;
+    align-items: center;
     gap: 24px;
     padding: 32px;
     background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
@@ -119,6 +120,9 @@
   }
   .author-avatar-wrapper {
     position: relative;
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
   }
   .author-avatar {
     width: 88px;
@@ -135,10 +139,10 @@
   }
   .author-status {
     position: absolute;
-    bottom: -4px;
-    right: -4px;
-    width: 24px;
-    height: 24px;
+    bottom: -2px;
+    right: -2px;
+    width: 22px;
+    height: 22px;
     background: var(--green);
     border: 3px solid var(--bg-secondary);
     border-radius: 50%;
@@ -147,15 +151,15 @@
     justify-content: center;
   }
   .author-status svg {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     color: #000;
   }
   .author-info {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
   }
   .author-header {
     display: flex;
@@ -185,6 +189,7 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    margin-top: 4px;
   }
   .author-link {
     display: inline-flex;
@@ -254,12 +259,15 @@
     bottom: 0;
     left: 0;
     right: 0;
+    top: auto;
     background: var(--bg-secondary);
     border-top: 1px solid var(--border-default);
-    padding: 8px 12px;
-    padding-bottom: max(8px, env(safe-area-inset-bottom));
-    z-index: 100;
+    border-bottom: none;
+    padding: 10px 8px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    z-index: 200;
     justify-content: space-around;
+    box-shadow: 0 -4px 20px -4px hsla(var(--shadow-color) / 0.1);
   }
   .mobile-nav-link {
     display: flex;
@@ -2573,10 +2581,6 @@
           <a href="https://twitter.com/WLXAJ" target="_blank" rel="noopener noreferrer" class="author-link">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             Follow
-          </a>
-          <a href="https://handl.studio" target="_blank" rel="noopener noreferrer" class="author-link secondary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
-            Work with me
           </a>
         </div>
       </div>
