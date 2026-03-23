@@ -48,6 +48,7 @@
 <link rel="stylesheet" href="/css/nav.css">
 <link rel="stylesheet" href="/css/footer.css">
 <link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/sidebar.css">
 
 <!-- Page-specific CSS -->
 <style>
@@ -720,20 +721,11 @@
 </head>
 <body>
 
-<div class="progress-bar" id="progressBar"></div>
-
 <nav>
   <div class="nav-left">
     <a href="/" class="nav-logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit">
       <span style="color:var(--red);font-family:var(--font-mono);font-weight:700;font-size:16px">//</span><span style="font-family:var(--font-mono);font-size:14px;color:var(--text-secondary);font-weight:500;letter-spacing:.03em">SHIPWRECKS</span>
     </a>
-    <div class="nav-links">
-      <a href="#security" class="nav-link active" data-section="security">Security <span class="nav-count">11</span></a>
-      <a href="#infra" class="nav-link" data-section="infra">Infra <span class="nav-count">10</span></a>
-      <a href="#data" class="nav-link" data-section="data">Data <span class="nav-count">6</span></a>
-      <a href="#code" class="nav-link" data-section="code">Code <span class="nav-count">7</span></a>
-      <a href="#ux" class="nav-link" data-section="ux">UX <span class="nav-count">3</span></a>
-    </div>
   </div>
   <div class="nav-right">
     <button class="text-size-btn" style="width:40px;height:40px;border-radius:6px;border:1px solid var(--border-default);background:var(--bg-tertiary);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary)" onclick="openSearch()" aria-label="Search" title="Search">
@@ -765,6 +757,9 @@
     </button>
   </div>
 </nav>
+
+<div class="page-layout">
+<div class="page-content">
 
 <div class="container">
 
@@ -2243,6 +2238,35 @@
   </div>
 </div>
 
+<!-- Sidebar — site navigation -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-label">Pages</div>
+  <a class="sb-link active" href="/mistakes">
+    <div class="sb-icon" style="background:var(--blue-soft);border:1px solid var(--blue-border)">📋</div>
+    <div class="sb-meta"><span class="sb-name">37 Mistakes</span><span class="sb-desc">📖 Read</span></div>
+  </a>
+  <a class="sb-link" href="/score">
+    <div class="sb-icon" style="background:var(--amber-soft);border:1px solid var(--amber-border)">🔥</div>
+    <div class="sb-meta"><span class="sb-name">Shipwreck Score</span><span class="sb-desc">🔧 Tool</span></div>
+    <span class="sb-arrow">→</span>
+  </a>
+  <div class="sb-label">On this page</div>
+  <a class="sb-section active" href="#security" data-section="security"><span class="sb-section-icon">🔒</span> Security <span class="sb-section-count">11</span></a>
+  <a class="sb-section" href="#infra" data-section="infra"><span class="sb-section-icon">⚡</span> Infra <span class="sb-section-count">10</span></a>
+  <a class="sb-section" href="#data" data-section="data"><span class="sb-section-icon">💾</span> Data <span class="sb-section-count">6</span></a>
+  <a class="sb-section" href="#code" data-section="code"><span class="sb-section-icon">🧹</span> Code <span class="sb-section-count">7</span></a>
+  <a class="sb-section" href="#ux" data-section="ux"><span class="sb-section-icon">🎨</span> UX <span class="sb-section-count">3</span></a>
+</aside>
+
+</div><!-- /page-content -->
+</div><!-- /page-layout -->
+
+<!-- Mobile sidebar toggle -->
+<button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()" aria-label="Menu">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+
 <footer class="site-footer">
   <div class="footer-accent"></div>
   <div class="footer-inner">
@@ -2377,16 +2401,20 @@
     localStorage.setItem('theme', newTheme);
   });
 
-  // ═══════════ PROGRESS BAR ═══════════
-  const progressBar = document.getElementById('progressBar');
-  
+  // ═══════════ SIDEBAR ═══════════
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sbOverlay').classList.toggle('open');
+  }
+
+  // Vertical progress bar on sidebar border
+  const sidebar = document.getElementById('sidebar');
   function updateProgress() {
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = (scrollTop / docHeight) * 100;
-    progressBar.style.width = `${progress}%`;
+    const progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+    sidebar.style.setProperty('--scroll-progress', progress + '%');
   }
-  
   window.addEventListener('scroll', updateProgress, { passive: true });
 
   // ═══════════ BACK TO TOP ═══════════
@@ -2428,19 +2456,19 @@
 
   document.querySelectorAll('.items').forEach(group => observer.observe(group));
 
-  // ═══════════ ACTIVE NAV LINK ON SCROLL ═══════════
+  // ═══════════ ACTIVE SECTION ON SCROLL ═══════════
   const sections = document.querySelectorAll('.section');
-  const navLinks = document.querySelectorAll('.nav-link');
+  const sidebarSections = document.querySelectorAll('.sb-section');
   const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
   const navObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const id = entry.target.id;
-        // Update desktop nav
-        navLinks.forEach(link => link.classList.remove('active'));
-        const activeLink = document.querySelector(`.nav-link[data-section="${id}"]`);
-        if (activeLink) activeLink.classList.add('active');
+        // Update sidebar sections
+        sidebarSections.forEach(link => link.classList.remove('active'));
+        const activeSection = document.querySelector(`.sb-section[data-section="${id}"]`);
+        if (activeSection) activeSection.classList.add('active');
         // Update mobile nav
         mobileNavLinks.forEach(link => link.classList.remove('active'));
         const activeMobileLink = document.querySelector(`.mobile-nav-link[data-section="${id}"]`);
