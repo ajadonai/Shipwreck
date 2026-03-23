@@ -102,7 +102,7 @@
     background: var(--bg-secondary);
     border-top: 1px solid var(--border-default);
     padding: 48px 24px;
-    margin-top: 64px;
+    margin-top: 0;
   }
   .footer-inner {
     max-width: var(--container-max);
@@ -708,6 +708,36 @@
   .hero {
     margin-bottom: 80px;
     position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: -40px -24px;
+    background: repeating-conic-gradient(var(--bg-primary) 0% 25%, transparent 0% 50%) 0 0/4px 4px;
+    opacity: .4;
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: var(--red);
+    filter: blur(140px);
+    opacity: .05;
+    top: -250px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .hero > * {
+    position: relative;
+    z-index: 1;
   }
 
   .hero-badge {
@@ -2672,7 +2702,7 @@
 </div>
 
 <!-- Share & Download Actions -->
-<div style="max-width:720px;margin:0 auto;padding:48px 24px 64px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+<div style="max-width:720px;margin:0 auto;padding:32px 24px 24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
   <a href="https://twitter.com/intent/tweet?text=37%20Mistakes%20Vibe%20Coders%20Ship%20to%20Production%20%E2%80%94%20the%20code%20review%20your%20AI%20never%20gave%20you&url=https%3A%2F%2Fshipwrecksbyai.vercel.app%2Fmistakes.html" class="footer-btn" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
     Post on X
@@ -2684,9 +2714,9 @@
 </div>
 
 <!-- What's Next -->
-<div style="max-width:720px;margin:0 auto;padding:0 24px 64px">
-  <div style="font-family:var(--font-mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-tertiary);margin-bottom:16px">What's next</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px" id="whatsNextGrid"></div>
+<div style="max-width:720px;margin:0 auto;padding:0 24px 40px">
+  <div style="font-family:var(--font-mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-tertiary);margin-bottom:14px">What's next</div>
+  <div id="whatsNextGrid" style="display:flex;flex-direction:column;gap:8px"></div>
 </div>
 
 <!-- Search Overlay -->
@@ -3468,31 +3498,16 @@ Share with your team!
     var grid = document.getElementById('whatsNextGrid');
     if (!grid) return;
     var pages = [
-      {title:'Shipwreck Score',desc:'Quiz your codebase. Get scored, get roasted, share the wreckage.',icon:'🔥',url:'/score.html',tag:'🔧 Tool',color:'amber',live:true},
-      {title:'Resources',desc:'How to actually fix each mistake. Guides, tools, and code snippets.',icon:'🛠️',url:'#',tag:'Coming soon',color:'',live:false},
-      {title:'Community',desc:'Submit a mistake. Vote on what\'s worst. Share your horror stories.',icon:'💬',url:'#',tag:'Coming soon',color:'',live:false}
+      {title:'Shipwreck Score',desc:'How production-ready is your AI-built code? Pick your stack, answer honestly, get your score.',icon:'🔥',url:'/score.html',tag:'🔧 Tool',color:'amber'}
     ];
     var h = '';
     pages.forEach(function(p) {
-      var el = p.live ? 'a' : 'div';
-      var href = p.live ? ' href="' + p.url + '"' : '';
-      var muted = p.live ? '' : 'opacity:0.4;pointer-events:none;';
-      var tagBg = p.color ? 'var(--' + p.color + '-soft)' : 'var(--bg-tertiary)';
-      var tagCol = p.color ? 'var(--' + p.color + ')' : 'var(--text-tertiary)';
-      var tagBdr = p.color ? 'var(--' + p.color + '-border)' : 'var(--border-default)';
-      var iconBg = p.color ? 'var(--' + p.color + '-soft)' : 'var(--bg-tertiary)';
-      var iconBdr = p.color ? 'var(--' + p.color + '-border)' : 'var(--border-default)';
-      h += '<' + el + href + ' style="display:flex;flex-direction:column;gap:10px;padding:20px;background:var(--bg-secondary);border:1px solid var(--border-default);border-radius:12px;text-decoration:none;color:inherit;transition:all .25s cubic-bezier(.16,1,.3,1);' + muted + '"'
-        + (p.live ? ' onmouseover="this.style.borderColor=\'var(--border-strong)\';this.style.transform=\'translateY(-2px)\';this.style.boxShadow=\'0 4px 24px -8px hsla(var(--shadow-color)/.15)\'" onmouseout="this.style.borderColor=\'var(--border-default)\';this.style.transform=\'none\';this.style.boxShadow=\'none\'"' : '')
-        + '>'
-        + '<div style="display:flex;align-items:center;justify-content:space-between">'
-        + '<div style="width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;background:' + iconBg + ';border:1px solid ' + iconBdr + '">' + p.icon + '</div>'
-        + '<span style="font-family:var(--font-mono);font-size:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;padding:2px 8px;border-radius:100px;background:' + tagBg + ';color:' + tagCol + ';border:1px solid ' + tagBdr + '">' + p.tag + '</span>'
-        + '</div>'
-        + '<div style="font-family:var(--font-display);font-size:15px;font-weight:500;letter-spacing:-0.02em;line-height:1.3">' + p.title + '</div>'
-        + '<div style="font-size:12px;color:var(--text-tertiary);line-height:1.4">' + p.desc + '</div>'
-        + '<div style="font-size:13px;color:var(--text-tertiary);margin-top:auto">\u2192</div>'
-        + '</' + el + '>';
+      h += '<a href="' + p.url + '" style="display:flex;align-items:center;gap:14px;padding:16px 14px;background:var(--bg-secondary);border:1px solid var(--border-default);border-radius:10px;text-decoration:none;color:inherit;transition:all .25s cubic-bezier(.16,1,.3,1)" onmouseover="this.style.borderColor=\'var(--border-strong)\';this.style.transform=\'translateY(-1px)\'" onmouseout="this.style.borderColor=\'var(--border-default)\';this.style.transform=\'none\'">'
+        + '<div style="width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--' + p.color + '-soft);border:1px solid var(--' + p.color + '-border);flex-shrink:0">' + p.icon + '</div>'
+        + '<div style="flex:1;min-width:0"><div style="font-family:var(--font-display);font-size:15px;font-weight:500;letter-spacing:-0.02em;margin-bottom:2px">' + p.title + '</div><div style="font-size:12px;color:var(--text-tertiary);line-height:1.4">' + p.desc + '</div></div>'
+        + '<span style="font-family:var(--font-mono);font-size:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;padding:3px 8px;border-radius:100px;background:var(--' + p.color + '-soft);color:var(--' + p.color + ');border:1px solid var(--' + p.color + '-border);white-space:nowrap">' + p.tag + '</span>'
+        + '<span style="color:var(--text-tertiary);font-size:16px">\u2192</span>'
+        + '</a>';
     });
     grid.innerHTML = h;
   })();
