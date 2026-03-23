@@ -528,7 +528,7 @@ var brkH='';CATS.forEach(function(c){var d=cd[c.id];if(!d||!d.has)return;var p=d
 brkH+='<div class="brk-row"><span class="brk-label">'+d.name+'</span><div class="brk-track"><div class="brk-fill" style="width:0;background:'+COL[d.color]+'" data-w="'+p+'%"></div></div><span class="brk-val" style="color:'+COL[d.color]+'">'+d.kept+'/'+d.mx+'</span></div>'});
 
 var gH='';guilty.sort(function(a,b){return b.s-a.s}).forEach(function(m){var sv=SV[m.s];var cat=CATS.find(function(c){return c.items.some(function(x){return x.id===m.id})});
-gH+='<a class="gi" href="/mistakes#mistake-'+m.id+'" target="_blank"><span class="gi-sev">'+sv.i+'</span><span class="gi-name">'+m.t+'</span><span class="gi-pts" style="color:'+COL[cat.color]+'">-'+sv.p+'</span><span class="gi-link">↗</span></a>'});
+gH+='<a class="gi" href="/mistakes" target="_blank"><span class="gi-sev">'+sv.i+'</span><span class="gi-name">'+m.t+'</span><span class="gi-pts" style="color:'+COL[cat.color]+'">-'+sv.p+'</span><span class="gi-link">↗</span></a>'});
 
 var pLbl=Array.from(selP).map(function(id){var p=PT.find(function(x){return x.id===id});return p?p.t:''}).filter(Boolean).join(' + ');
 var twt=encodeURIComponent('My Shipwreck Score: '+pct+'% ('+tested+' checks)\n'+rank.emoji+' '+rank.title+'\n'+guilty.length+' production mistake'+(guilty.length!==1?'s':'')+' · '+pLbl+'\nhttps://shipwrecksbyai.vercel.app/score');
