@@ -72,11 +72,9 @@ nav{position:sticky;top:0;z-index:100;height:var(--nh);background:var(--bg1);bor
 .dir{padding:0 0 56px}
 .dir-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .sec-label{font-family:var(--fm);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--t3)}
-.dir-pager{display:flex;align-items:center;gap:8px}
-.dir-pager-info{font-family:var(--fm);font-size:10px;color:var(--t3)}
-.pgb{width:30px;height:30px;border-radius:6px;border:1px solid var(--b1);background:var(--bg2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:all .15s var(--ease);font-size:12px}
-.pgb:hover{background:var(--bg3);color:var(--t0);border-color:var(--b2)}
-.pgb:disabled{opacity:.25;pointer-events:none}
+.dir-count{font-family:var(--fm);font-size:10px;color:var(--t3)}
+.load-more{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:100px;border:1px solid var(--b1);background:var(--bg1);color:var(--t2);font-family:var(--fm);font-size:11px;font-weight:600;cursor:pointer;transition:all .25s var(--ease)}
+.load-more:hover{background:var(--bg2);border-color:var(--b2);color:var(--t0);transform:translateY(-1px)}
 .dir-tiles{display:flex;flex-direction:column;gap:10px}
 .tile{display:flex;align-items:center;gap:16px;padding:20px 18px;background:var(--bg1);border:1px solid var(--b0);border-radius:12px;text-decoration:none;color:inherit;transition:all .25s var(--ease)}
 .tile:hover{border-color:var(--b2);box-shadow:0 4px 24px -8px rgba(0,0,0,.3);transform:translateY(-1px)}
@@ -159,13 +157,16 @@ nav{position:sticky;top:0;z-index:100;height:var(--nh);background:var(--bg1);bor
     <p>Shipwrecks is where developers learn to close the gap between AI-generated code and production-ready software. Checklists, audits, prompt guides, and the hard lessons AI won't teach you on its own.</p>
   </div>
 
-  <!-- Explore — tile grid, rotates content, paginated -->
+  <!-- Explore — load more -->
   <div class="dir">
     <div class="dir-hdr">
       <span class="sec-label">Explore</span>
-      <div class="dir-pager" id="dirPager"></div>
+      <span class="dir-count" id="dirCount"></span>
     </div>
     <div class="dir-tiles" id="dirGrid"></div>
+    <div id="loadMoreWrap" style="text-align:center;padding-top:16px;display:none">
+      <button class="load-more" id="loadMoreBtn" onclick="loadMore()">Load more</button>
+    </div>
   </div>
 
   <!-- Newsletter -->
@@ -211,7 +212,7 @@ var PAGES=[
   */
 ];
 
-var PER_PAGE=10,curPage=0;
+var BATCH=10,shown=0;
 
 /* Seeded shuffle — same seed = same order for that time period */
 function seededShuffle(arr,seed){var a=arr.slice();for(var i=a.length-1;i>0;i--){seed=(seed*16807+0)%2147483647;var j=seed%((i)+1);var tmp=a[i];a[i]=a[j];a[j]=tmp}return a}
@@ -219,45 +220,41 @@ function seededShuffle(arr,seed){var a=arr.slice();for(var i=a.length-1;i>0;i--)
 /* Time seed — changes every 6 hours */
 function getTimeSeed(){var d=new Date();return Math.floor(d.getTime()/(6*60*60*1000))}
 
+var shuffled=seededShuffle(PAGES,getTimeSeed());
+
 /* Tag icon color classes */
 var TCC={read:'blu',tool:'amb',guide:'pur',community:'grn'};
 
-function renderExplore(){
-  var shuffled=seededShuffle(PAGES,getTimeSeed());
-  var total=shuffled.length;
-  var totalPages=Math.ceil(total/PER_PAGE);
-  if(curPage>=totalPages)curPage=totalPages-1;
-  if(curPage<0)curPage=0;
-  var start=curPage*PER_PAGE;
-  var slice=shuffled.slice(start,start+PER_PAGE);
-
-  var grid=document.getElementById('dirGrid');
-  var h='';
-  slice.forEach(function(p){
-    var tag=TC[p.type]||TC.read;
-    var iconCls=TCC[p.type]||'blu';
-    h+='<a class="tile" href="'+p.url+'">'
-      +'<div class="tile-icon '+iconCls+'">'+p.icon+'</div>'
-      +'<div class="tile-meta">'
-      +'<div class="tile-title">'+p.title+'</div>'
-      +'<div class="tile-desc">'+p.desc+'</div>'
-      +'</div>'
-      +'<span class="tile-tag" style="background:'+tag.bg+';color:'+tag.c+';border:1px solid '+tag.b+'">'+tag.l+'</span>'
-      +'<span class="tile-arrow">→</span>'
-      +'</a>';
-  });
-  grid.innerHTML=h;
-
-  /* Pager */
-  var pager=document.getElementById('dirPager');
-  if(totalPages<=1){pager.innerHTML='';return}
-  var end=Math.min(start+PER_PAGE,total);
-  pager.innerHTML='<button class="pgb" onclick="prevPage()"'+(curPage===0?' disabled':'')+'>‹</button>'
-    +'<span class="dir-pager-info">'+(start+1)+'–'+end+' of '+total+'</span>'
-    +'<button class="pgb" onclick="nextPage()"'+(curPage>=totalPages-1?' disabled':'')+'>›</button>';
+function renderTile(p){
+  var tag=TC[p.type]||TC.read;
+  var iconCls=TCC[p.type]||'blu';
+  return '<a class="tile" href="'+p.url+'">'
+    +'<div class="tile-icon '+iconCls+'">'+p.icon+'</div>'
+    +'<div class="tile-meta">'
+    +'<div class="tile-title">'+p.title+'</div>'
+    +'<div class="tile-desc">'+p.desc+'</div>'
+    +'</div>'
+    +'<span class="tile-tag" style="background:'+tag.bg+';color:'+tag.c+';border:1px solid '+tag.b+'">'+tag.l+'</span>'
+    +'<span class="tile-arrow">→</span>'
+    +'</a>';
 }
-function prevPage(){if(curPage>0){curPage--;renderExplore()}}
-function nextPage(){var tp=Math.ceil(PAGES.length/PER_PAGE);if(curPage<tp-1){curPage++;renderExplore()}}
+
+function renderExplore(){
+  var grid=document.getElementById('dirGrid');
+  var end=Math.min(shown+BATCH,shuffled.length);
+  var h='';
+  for(var i=shown;i<end;i++){h+=renderTile(shuffled[i])}
+  grid.insertAdjacentHTML('beforeend',h);
+  shown=end;
+
+  /* Update count */
+  document.getElementById('dirCount').textContent=shown+' of '+shuffled.length;
+
+  /* Show/hide load more */
+  var wrap=document.getElementById('loadMoreWrap');
+  if(shown>=shuffled.length){wrap.style.display='none'}else{wrap.style.display='block'}
+}
+function loadMore(){renderExplore()}
 renderExplore();
 
 function handleNL(e){e.preventDefault();document.getElementById('nlM').className='nlm ok';document.getElementById('nlM').textContent="Thanks! We'll be in touch.";document.getElementById('nlE').value='';return false}
