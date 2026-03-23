@@ -144,8 +144,8 @@ nav{position:sticky;top:0;z-index:100;height:var(--nh);background:var(--bg1);bor
     <p class="hero-p">Guides, tools, and hard-won lessons for developers building with AI. Ship faster without shipping broken.</p>
     <div class="hero-stats"><span><b>Guides</b></span><span><b>Tools</b></span><span><b>Checklists</b></span></div>
     <div class="hero-ctas">
-      <a class="cta-p" href="/mistakes.html">Browse the checklist →</a>
-      <a class="cta-s" href="/score.html">Take the audit →</a>
+      <a class="cta-p" href="/mistakes">Browse the checklist →</a>
+      <a class="cta-s" href="/score">Take the audit →</a>
     </div>
     <div class="hero-dots" id="hD"></div>
   </div>
@@ -191,7 +191,7 @@ goSlide(new Date().getDate()%SL.length)})();
 function goSlide(i){var s=document.querySelectorAll('.hero-slide'),d=document.querySelectorAll('.hero-dot');for(var j=0;j<s.length;j++){s[j].classList.toggle('active',j===i);d[j].classList.toggle('active',j===i)}}
 
 /* Search */
-var SD=[{t:'37 Mistakes',d:'Full production checklist',u:'/mistakes.html',i:'📋'},{t:'Shipwreck Score',d:'Audit your codebase',u:'/score.html',i:'🔥'},{t:'Hardcoded API keys',u:'/mistakes.html#mistake-3',i:'🔒',c:'Security'},{t:'No rate limiting',u:'/mistakes.html#mistake-12',i:'⚡',c:'Infra'},{t:'No database backups',u:'/mistakes.html#mistake-26',i:'💾',c:'Data'},{t:'No tests at all',u:'/mistakes.html#mistake-32',i:'🧹',c:'Code'},{t:'No loading states',u:'/mistakes.html#mistake-35',i:'🎨',c:'UX'}];
+var SD=[{t:'37 Mistakes',d:'Full production checklist',u:'/mistakes',i:'📋'},{t:'Shipwreck Score',d:'Audit your codebase',u:'/score',i:'🔥'},{t:'Hardcoded API keys',u:'/mistakes#mistake-3',i:'🔒',c:'Security'},{t:'No rate limiting',u:'/mistakes#mistake-12',i:'⚡',c:'Infra'},{t:'No database backups',u:'/mistakes#mistake-26',i:'💾',c:'Data'},{t:'No tests at all',u:'/mistakes#mistake-32',i:'🧹',c:'Code'},{t:'No loading states',u:'/mistakes#mistake-35',i:'🎨',c:'UX'}];
 function openSearch(){document.getElementById('sov').classList.add('open');var i=document.getElementById('sInp');i.value='';i.focus();sr('')}
 function closeSearch(){document.getElementById('sov').classList.remove('open')}
 document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'&&document.getElementById('sov').classList.contains('open'))closeSearch()});
@@ -204,11 +204,11 @@ var TC={read:{l:'📖 Read',bg:'var(--blu-s)',c:'var(--blu)',b:'var(--blu-b)',g:
 
 /* Content registry — add new pages here. That's it. */
 var PAGES=[
-  {id:'mistakes',title:'37 Mistakes',desc:'The production mistakes AI-generated code ships most often.',type:'read',url:'/mistakes.html',icon:'📋',cta:'Browse the checklist →'},
-  {id:'score',title:'Shipwreck Score',desc:'How production-ready is your AI-built code? Take the audit.',type:'tool',url:'/score.html',icon:'🔥',cta:'Take the audit →'}
+  {id:'mistakes',title:'37 Mistakes',desc:'The production mistakes AI-generated code ships most often.',type:'read',url:'/mistakes',icon:'📋',cta:'Browse the checklist →'},
+  {id:'score',title:'Shipwreck Score',desc:'How production-ready is your AI-built code? Take the audit.',type:'tool',url:'/score',icon:'🔥',cta:'Take the audit →'}
   /* Future pages — just add entries here:
-  {id:'prompts',title:'Prompt Engineering Guide',desc:'Write prompts that produce production-grade code.',type:'guide',url:'/prompts.html',icon:'✍️',cta:'Read the guide →'},
-  {id:'cursor-tips',title:'Cursor Tips & Tricks',desc:'Advanced workflows for Cursor power users.',type:'guide',url:'/cursor.html',icon:'⚡',cta:'Learn more →'},
+  {id:'prompts',title:'Prompt Engineering Guide',desc:'Write prompts that produce production-grade code.',type:'guide',url:'/prompts',icon:'✍️',cta:'Read the guide →'},
+  {id:'cursor-tips',title:'Cursor Tips & Tricks',desc:'Advanced workflows for Cursor power users.',type:'guide',url:'/cursor',icon:'⚡',cta:'Learn more →'},
   */
 ];
 

@@ -375,8 +375,8 @@ function closeSearch(){document.getElementById('searchOv').classList.remove('ope
 document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'&&document.getElementById('searchOv').classList.contains('open'))closeSearch()});
 document.getElementById('sInp').addEventListener('input',function(e){_sr(e.target.value)});
 var _SD=[];
-function _buildSearch(){_SD=[{t:'Home',d:'Shipwrecks homepage',u:'/',i:'🏠'},{t:'37 Mistakes',d:'The full production checklist',u:'/mistakes.html',i:'📋'}];
-CATS.forEach(function(c){c.items.forEach(function(m){_SD.push({t:m.t,d:m.d,u:'/mistakes.html#mistake-'+m.id,i:c.icon,cat:c.name})})})}
+function _buildSearch(){_SD=[{t:'Home',d:'Shipwrecks homepage',u:'/',i:'🏠'},{t:'37 Mistakes',d:'The full production checklist',u:'/mistakes',i:'📋'}];
+CATS.forEach(function(c){c.items.forEach(function(m){_SD.push({t:m.t,d:m.d,u:'/mistakes#mistake-'+m.id,i:c.icon,cat:c.name})})})}
 function _sr(q){if(!_SD.length)_buildSearch();var r=document.getElementById('sRes');q=q.toLowerCase().trim();if(!q){r.innerHTML='<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Type to search...</div>';return}
 var m=_SD.filter(function(d){return(d.t+' '+(d.d||'')+' '+(d.cat||'')).toLowerCase().indexOf(q)!==-1});
 if(!m.length){r.innerHTML='<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">No results</div>';return}
@@ -507,10 +507,10 @@ var brkH='';CATS.forEach(function(c){var d=cd[c.id];if(!d||!d.has)return;var p=d
 brkH+='<div class="brk-row"><span class="brk-label">'+d.name+'</span><div class="brk-track"><div class="brk-fill" style="width:0;background:'+COL[d.color]+'" data-w="'+p+'%"></div></div><span class="brk-val" style="color:'+COL[d.color]+'">'+d.kept+'/'+d.mx+'</span></div>'});
 
 var gH='';guilty.sort(function(a,b){return b.s-a.s}).forEach(function(m){var sv=SV[m.s];var cat=CATS.find(function(c){return c.items.some(function(x){return x.id===m.id})});
-gH+='<a class="gi" href="/mistakes.html#mistake-'+m.id+'" target="_blank"><span class="gi-sev">'+sv.i+'</span><span class="gi-name">'+m.t+'</span><span class="gi-pts" style="color:'+COL[cat.color]+'">-'+sv.p+'</span><span class="gi-link">↗</span></a>'});
+gH+='<a class="gi" href="/mistakes#mistake-'+m.id+'" target="_blank"><span class="gi-sev">'+sv.i+'</span><span class="gi-name">'+m.t+'</span><span class="gi-pts" style="color:'+COL[cat.color]+'">-'+sv.p+'</span><span class="gi-link">↗</span></a>'});
 
 var pLbl=Array.from(selP).map(function(id){var p=PT.find(function(x){return x.id===id});return p?p.t:''}).filter(Boolean).join(' + ');
-var twt=encodeURIComponent('My Shipwreck Score: '+score+'/'+maxS+' ('+pct+'%)\n'+rank.emoji+' '+rank.title+'\n'+guilty.length+' production mistake'+(guilty.length!==1?'s':'')+'\nhttps://shipwrecksbyai.vercel.app/score.html');
+var twt=encodeURIComponent('My Shipwreck Score: '+score+'/'+maxS+' ('+pct+'%)\n'+rank.emoji+' '+rank.title+'\n'+guilty.length+' production mistake'+(guilty.length!==1?'s':'')+'\nhttps://shipwrecksbyai.vercel.app/score');
 
 document.getElementById('resContent').innerHTML=
 '<div class="res-hero"><div class="res-glow" style="background:'+rank.glow+';opacity:.15"></div>'
@@ -550,14 +550,14 @@ window._scoreTwt=twt;
 
 animS(score);setTimeout(function(){document.querySelectorAll('.brk-fill[data-w]').forEach(function(b){b.style.width=b.dataset.w})},400);
 document.getElementById('wnBlock').style.display='block';renderWN();
-window._cpText=rank.emoji+' '+rank.title+': '+score+'/'+maxS+' ('+pct+'%)\n'+guilty.length+' production mistakes\nhttps://shipwrecksbyai.vercel.app/score.html'}
+window._cpText=rank.emoji+' '+rank.title+': '+score+'/'+maxS+' ('+pct+'%)\n'+guilty.length+' production mistakes\nhttps://shipwrecksbyai.vercel.app/score'}
 
 function animS(t){var el=document.getElementById('sNum');if(!el)return;var st=performance.now();(function tk(n){var p=Math.min((n-st)/1200,1);el.textContent=Math.round((1-Math.pow(1-p,3))*t);if(p<1)requestAnimationFrame(tk)})(st)}
 function cpRes(){navigator.clipboard.writeText(window._cpText).then(function(){var b=document.querySelector('.sb-c');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy'},2000)})}
 function retake(){selP.clear();ans={};activeQ=[];document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('on')});document.getElementById('setupBlock').style.display='';document.getElementById('auditContent').style.display='none';document.getElementById('smeta').classList.remove('vis');document.getElementById('gobtn').classList.remove('rdy');document.getElementById('wnBlock').style.display='none';document.querySelector('.sub-bar').classList.remove('vis');go('s-hero')}
 
 function renderWN(){var grid=document.getElementById('wnGrid');grid.innerHTML=
-'<a class="wn-card" href="/mistakes.html"><div class="wn-card-top"><span class="wn-card-icon">📋</span><span class="wn-card-tag" style="color:var(--blu);border-color:var(--blu-b)">📖 Read</span></div><div class="wn-card-title">37 Mistakes</div><div class="wn-card-desc">The full production checklist with details.</div></a>'}
+'<a class="wn-card" href="/mistakes"><div class="wn-card-top"><span class="wn-card-icon">📋</span><span class="wn-card-tag" style="color:var(--blu);border-color:var(--blu-b)">📖 Read</span></div><div class="wn-card-title">37 Mistakes</div><div class="wn-card-desc">The full production checklist with details.</div></a>'}
 
 /* Ranks */
 function getRank(pct){
