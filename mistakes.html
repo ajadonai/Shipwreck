@@ -134,23 +134,25 @@
     align-items: center;
     gap: 8px;
     font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 12px 20px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-default);
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 12px 22px;
+    border-radius: 100px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.2s var(--ease-out);
+    transition: all 0.25s var(--ease-out);
   }
   .footer-btn:hover {
-    background: var(--bg-primary);
-    border-color: var(--border-strong);
-    color: var(--text-primary);
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--text-inverse);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -6px hsla(var(--shadow-color) / 0.3);
   }
-  .footer-btn svg { width: 15px; height: 15px; }
+  .footer-btn svg { width: 14px; height: 14px; }
   .footer-divider {
     height: 1px;
     background: var(--border-default);
@@ -701,7 +703,7 @@
   .container {
     max-width: var(--container-max);
     margin: 0 auto;
-    padding: 72px 24px 120px;
+    padding: 72px 24px 32px;
   }
 
   /* ═══════════ HERO ═══════════ */
@@ -2702,7 +2704,7 @@
 </div>
 
 <!-- Share & Download Actions -->
-<div style="max-width:720px;margin:0 auto;padding:32px 24px 24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+<div style="max-width:720px;margin:0 auto;padding:24px 24px 28px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
   <a href="https://twitter.com/intent/tweet?text=37%20Mistakes%20Vibe%20Coders%20Ship%20to%20Production%20%E2%80%94%20the%20code%20review%20your%20AI%20never%20gave%20you&url=https%3A%2F%2Fshipwrecksbyai.vercel.app%2Fmistakes.html" class="footer-btn" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
     Post on X
