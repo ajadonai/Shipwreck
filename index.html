@@ -1,261 +1,1630 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark" data-text-size="medium">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Shipwrecks — The Production Checklist Your AI Forgot</title>
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<meta name="description" content="37 critical mistakes vibe coders ship to production. Audit your codebase, score yourself, learn what to fix.">
-<meta property="og:title" content="Shipwrecks — The Production Checklist Your AI Forgot">
-<meta property="og:description" content="37 mistakes. Quiz your codebase. Fix what's broken.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://shipwrecksbyai.vercel.app/">
-<meta property="og:image" content="https://shipwrecksbyai.vercel.app/og-image.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@WLXAJ">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--fd:'Fraunces',Georgia,serif;--fb:'DM Sans',-apple-system,sans-serif;--fm:'DM Mono','SF Mono',monospace;--nh:60px;--mw:800px;--r:12px;--ts:1;--ease:cubic-bezier(.16,1,.3,1)}
-html[data-text-size="small"]{--ts:.85}html[data-text-size="medium"]{--ts:1}html[data-text-size="large"]{--ts:1.2}
-[data-theme="dark"]{--bg0:#0a0a0a;--bg1:#111;--bg2:#181818;--bg3:#222;--b0:rgba(255,255,255,.04);--b1:rgba(255,255,255,.08);--b2:rgba(255,255,255,.12);--t0:#f5f5f5;--t1:#ccc;--t2:#888;--t3:#555;--ti:#0a0a0a;--red:#ff6b6b;--red-s:rgba(255,107,107,.06);--red-b:rgba(255,107,107,.15);--amb:#ffb347;--amb-s:rgba(255,179,71,.06);--amb-b:rgba(255,179,71,.15);--grn:#69db7c;--grn-s:rgba(105,219,124,.06);--grn-b:rgba(105,219,124,.15);--blu:#5cc8ff;--blu-s:rgba(92,200,255,.06);--blu-b:rgba(92,200,255,.15);--pur:#b197fc;--pur-s:rgba(177,151,252,.06);--pur-b:rgba(177,151,252,.15)}
-[data-theme="light"]{--bg0:#f8f7f4;--bg1:#f0eeeb;--bg2:#e8e6e1;--bg3:#ddd;--b0:rgba(0,0,0,.03);--b1:rgba(0,0,0,.06);--b2:rgba(0,0,0,.1);--t0:#1a1a1a;--t1:#444;--t2:#777;--t3:#aaa;--ti:#fff;--red:#dc3545;--red-s:rgba(220,53,69,.05);--red-b:rgba(220,53,69,.12);--amb:#d48806;--amb-s:rgba(212,136,6,.05);--amb-b:rgba(212,136,6,.12);--grn:#2f9e44;--grn-s:rgba(47,158,68,.05);--grn-b:rgba(47,158,68,.12);--blu:#0c7cd5;--blu-s:rgba(12,124,213,.05);--blu-b:rgba(12,124,213,.12);--pur:#7048e8;--pur-s:rgba(112,72,232,.05);--pur-b:rgba(112,72,232,.12)}
-html{scroll-behavior:smooth}body{background:var(--bg0);color:var(--t0);font-family:var(--fb);font-size:calc(15px*var(--ts));line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .4s var(--ease),color .4s var(--ease)}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Shipwrecks — The Production Checklist Your AI Forgot</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
+  <meta name="description" content="37 critical mistakes vibe coders ship to production. Audit your codebase, score yourself, learn what to fix.">
+  <meta property="og:title" content="Shipwrecks — The Production Checklist Your AI Forgot">
+  <meta property="og:description" content="37 mistakes. Quiz your codebase. Fix what's broken.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shipwrecksbyai.vercel.app/">
+  <meta property="og:image" content="https://shipwrecksbyai.vercel.app/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@WLXAJ">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Design Tokens
+   Shared across all pages & templates
+   ═══════════════════════════════════════ */
 
-/* Nav */
-nav{position:sticky;top:0;z-index:100;height:var(--nh);background:var(--bg1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 20px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.nl{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit}.nl svg{width:26px;height:26px}.nlt{font-family:var(--fm);font-size:12px;color:var(--t3)}
-.nr{display:flex;align-items:center;gap:5px}
-.nb{width:36px;height:36px;border-radius:8px;border:1px solid var(--b1);background:var(--bg2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:all .15s var(--ease);font-family:var(--fb);font-size:13px;font-weight:600}.nb:hover{background:var(--bg3);color:var(--t0);border-color:var(--b2)}.nb svg{width:16px;height:16px}
-[data-theme="dark"] .i-s{display:block}[data-theme="dark"] .i-m{display:none}[data-theme="light"] .i-s{display:none}[data-theme="light"] .i-m{display:block}
-.tsd{position:absolute;top:100%;right:0;margin-top:6px;background:var(--bg2);border:1px solid var(--b1);border-radius:8px;padding:4px;display:none;flex-direction:column;gap:2px;min-width:90px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:200}#tsd.open{display:flex}
-.to{padding:7px 10px;border:none;background:transparent;color:var(--t2);font-family:var(--fb);font-size:12px;cursor:pointer;border-radius:4px;text-align:left}.to:hover{background:var(--bg3);color:var(--t0)}.to.on{background:var(--bg3);color:var(--t0);font-weight:600}
+:root {
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'DM Mono', 'SF Mono', monospace;
+  --text-scale: 1;
 
-/* Search */
-.sov{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:min(18vh,100px) 20px}.sov.open{display:flex}
-.sbx{background:var(--bg2);border:1px solid var(--b1);border-radius:16px;width:100%;max-width:480px;box-shadow:0 24px 48px rgba(0,0,0,.5);overflow:hidden;animation:si .2s var(--ease)}@keyframes si{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
-.sbr{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--b0)}.sbr svg{width:16px;height:16px;color:var(--t3)}.sbr input{flex:1;background:none;border:none;outline:none;color:var(--t0);font-family:var(--fb);font-size:15px}.sbr input::placeholder{color:var(--t3)}.esc{font-family:var(--fm);font-size:9px;color:var(--t3);border:1px solid var(--b1);border-radius:3px;padding:2px 5px;cursor:pointer}
-.srs{max-height:320px;overflow-y:auto;padding:6px}
+  /* Spacing */
+  --nav-h: 60px;
+  --container-max: 720px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
 
-/* Layout */
-.mx{max-width:var(--mw);margin:0 auto;padding:0 20px}
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-/* ═══ HERO — compact, not fullscreen ═══ */
-.hero{padding:64px 0 48px;text-align:center;position:relative}
-.hero-sub{font-family:var(--fm);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin-bottom:20px}
-.hero-h{font-family:var(--fd);font-size:clamp(28px,5.5vw,44px);font-weight:400;line-height:1.15;letter-spacing:-.03em;margin-bottom:14px}
-.hero-h em{font-style:italic;color:var(--amb);font-weight:500}
-.hero-p{font-size:calc(15px*var(--ts));color:var(--t2);line-height:1.65;max-width:480px;margin:0 auto}
+/* Text size variants */
+html[data-text-size="small"]  { --text-scale: 0.8; }
+html[data-text-size="medium"] { --text-scale: 1; }
+html[data-text-size="large"]  { --text-scale: 1.25; }
 
-/* ═══ DUAL CTAs — the two main paths ═══ */
-.paths{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:40px 0 64px}
-.path{padding:28px 24px;background:var(--bg1);border:1px solid var(--b0);border-radius:16px;text-decoration:none;color:inherit;transition:all .3s var(--ease);display:flex;flex-direction:column;position:relative;overflow:hidden}
-.path:hover{border-color:var(--b2);transform:translateY(-3px);box-shadow:0 12px 40px -12px rgba(0,0,0,.4)}
-.path-glow{position:absolute;width:200px;height:200px;border-radius:50%;filter:blur(80px);opacity:0;transition:opacity .4s;top:-60px;right:-60px}
-.path:hover .path-glow{opacity:.08}
-.path-icon{font-size:28px;margin-bottom:14px}
-.path-h{font-family:var(--fd);font-size:calc(20px*var(--ts));font-weight:500;letter-spacing:-.02em;margin-bottom:6px}
-.path-p{font-size:calc(13px*var(--ts));color:var(--t2);line-height:1.5;margin-bottom:16px;flex:1}
-.path-cta{display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);transition:color .2s}
-.path:hover .path-cta{color:var(--t0)}
-.path-stats{display:flex;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid var(--b0);font-family:var(--fm);font-size:10px;color:var(--t3)}
-.path-stats b{color:var(--t2);font-weight:600}
+/* ═══ DARK THEME ═══ */
+[data-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #222222;
+  --bg-elevated: #2a2a2a;
 
-/* ═══ PREVIEW — taste of the content ═══ */
-.preview{margin-bottom:64px}
-.preview-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.preview-title{font-family:var(--fm);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--t3)}
-.preview-link{font-family:var(--fm);font-size:11px;color:var(--t3);text-decoration:none;transition:color .2s}.preview-link:hover{color:var(--t0)}
-.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
-.prev-card{padding:14px;background:var(--bg1);border:1px solid var(--b0);border-radius:10px;text-decoration:none;color:inherit;transition:all .2s var(--ease)}
-.prev-card:hover{border-color:var(--b2);background:var(--bg2)}
-.prev-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.prev-cat{font-family:var(--fm);font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:2px 6px;border-radius:3px}
-.prev-sev{font-family:var(--fm);font-size:8px;padding:2px 6px;border-radius:3px}
-.prev-title{font-size:calc(13px*var(--ts));font-weight:600;line-height:1.3;margin-bottom:4px}
-.prev-desc{font-size:calc(11px*var(--ts));color:var(--t3);line-height:1.4}
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.15);
 
-/* ═══ CATEGORIES — visual proof of depth ═══ */
-.cats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:64px}
-.cat{padding:16px 12px;background:var(--bg1);border:1px solid var(--b0);border-radius:10px;text-align:center;text-decoration:none;color:inherit;transition:all .2s var(--ease)}
-.cat:hover{border-color:var(--b2);transform:translateY(-2px)}
-.cat-icon{font-size:20px;margin-bottom:6px}
-.cat-name{font-family:var(--fm);font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--t2);margin-bottom:2px}
-.cat-count{font-family:var(--fd);font-size:20px;font-weight:400;color:var(--t1)}
+  --text-primary: #f5f5f5;
+  --text-secondary: #a8a8a8;
+  --text-tertiary: #6b6b6b;
+  --text-inverse: #121212;
 
-/* ═══ COMING SOON ═══ */
-.soon{margin-bottom:64px}
-.soon-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.soon-card{padding:20px;background:var(--bg1);border:1px solid var(--b0);border-radius:12px;opacity:.35}
-.soon-icon{font-size:20px;margin-bottom:8px}
-.soon-h{font-family:var(--fd);font-size:calc(15px*var(--ts));font-weight:500;margin-bottom:4px}
-.soon-p{font-size:calc(12px*var(--ts));color:var(--t3);line-height:1.4;margin-bottom:8px}
-.soon-tag{font-family:var(--fm);font-size:8px;text-transform:uppercase;letter-spacing:.06em;color:var(--t3)}
+  --red: #ff6b6b;
+  --red-soft: rgba(255, 107, 107, 0.1);
+  --red-border: rgba(255, 107, 107, 0.25);
+
+  --amber: #ffb347;
+  --amber-soft: rgba(255, 179, 71, 0.1);
+  --amber-border: rgba(255, 179, 71, 0.25);
+
+  --blue: #5cc8ff;
+  --blue-soft: rgba(92, 200, 255, 0.1);
+  --blue-border: rgba(92, 200, 255, 0.25);
+
+  --green: #69db7c;
+  --green-soft: rgba(105, 219, 124, 0.1);
+  --green-border: rgba(105, 219, 124, 0.25);
+
+  --purple: #b197fc;
+  --purple-soft: rgba(177, 151, 252, 0.1);
+  --purple-border: rgba(177, 151, 252, 0.25);
+
+  --overlay: rgba(0, 0, 0, 0.6);
+  --shadow-color: 0deg 0% 0%;
+}
+
+/* ═══ LIGHT THEME ═══ */
+[data-theme="light"] {
+  --bg-primary: #fafafa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f0f0;
+  --bg-elevated: #ffffff;
+
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-default: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.12);
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-inverse: #ffffff;
+
+  --red: #e53935;
+  --red-soft: rgba(229, 57, 53, 0.08);
+  --red-border: rgba(229, 57, 53, 0.2);
+
+  --amber: #ef8c00;
+  --amber-soft: rgba(239, 140, 0, 0.08);
+  --amber-border: rgba(239, 140, 0, 0.2);
+
+  --blue: #0088cc;
+  --blue-soft: rgba(0, 136, 204, 0.08);
+  --blue-border: rgba(0, 136, 204, 0.2);
+
+  --green: #2e9e45;
+  --green-soft: rgba(46, 158, 69, 0.08);
+  --green-border: rgba(46, 158, 69, 0.2);
+
+  --purple: #7c4dff;
+  --purple-soft: rgba(124, 77, 255, 0.08);
+  --purple-border: rgba(124, 77, 255, 0.2);
+
+  --overlay: rgba(255, 255, 255, 0.85);
+  --shadow-color: 220deg 10% 50%;
+}
+
+/* ═══ RESET & BASE ═══ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 24px); }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: calc(15px * var(--text-scale));
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
+}
+
+/* ═══ SHARED UTILITIES ═══ */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Severity / tag badges */
+.badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.badge-red    { background: var(--red-soft);    color: var(--red);    border: 1px solid var(--red-border); }
+.badge-amber  { background: var(--amber-soft);  color: var(--amber);  border: 1px solid var(--amber-border); }
+.badge-blue   { background: var(--blue-soft);   color: var(--blue);   border: 1px solid var(--blue-border); }
+.badge-green  { background: var(--green-soft);  color: var(--green);  border: 1px solid var(--green-border); }
+.badge-purple { background: var(--purple-soft); color: var(--purple); border: 1px solid var(--purple-border); }
+.badge-muted  { background: var(--bg-tertiary); color: var(--text-tertiary); border: 1px solid var(--border-default); }
+
+/* Pill badges (rounded) */
+.pill {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Primary CTA button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s var(--ease-out);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -6px hsla(var(--shadow-color) / 0.4);
+}
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Shared Components
+   Nav, Footer, Search Overlay
+   ═══════════════════════════════════════ */
+
+/* ═══ NAVBAR ═══ */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  transition: background 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-logo-icon { width: 28px; height: 28px; flex-shrink: 0; }
+
+.nav-logo-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-out);
+  color: var(--text-secondary);
+}
+
+.nav-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.nav-btn svg { width: 18px; height: 18px; }
+.nav-btn.text-sz {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Text Size Dropdown */
+.text-size-toggle { position: relative; }
+
+.text-size-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 100px;
+  box-shadow: 0 8px 24px -8px hsla(var(--shadow-color) / 0.3);
+  z-index: 200;
+}
+
+.text-size-dropdown.open { display: flex; }
+
+.ts-opt {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  transition: all 0.15s var(--ease-out);
+}
+
+.ts-opt:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.ts-opt.active {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Theme Toggle */
+.theme-toggle svg { transition: transform 0.3s var(--ease-spring); }
+.theme-toggle:hover svg { transform: rotate(15deg); }
+
+[data-theme="dark"] .icon-sun  { display: block; }
+[data-theme="dark"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun  { display: none; }
+[data-theme="light"] .icon-moon { display: block; }
+
+
+/* ═══ CMD+K SEARCH OVERLAY ═══ */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 500;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: min(20vh, 120px) 24px 24px;
+}
+
+.search-overlay.open { display: flex; }
+
+.search-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 24px 48px -12px hsla(var(--shadow-color) / 0.4);
+  overflow: hidden;
+  animation: modalIn 0.2s var(--ease-out);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.search-input-wrap svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.search-input::placeholder { color: var(--text-tertiary); }
+
+.search-esc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.search-results {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.search-results::-webkit-scrollbar { width: 4px; }
+.search-results::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 2px; }
+
+.search-empty {
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+
+.sr-group {
+  padding: 8px 12px 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+}
+
+.sr-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.1s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sr-item:hover, .sr-item.focused { background: var(--bg-tertiary); }
+
+.sr-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.sr-icon.red    { background: var(--red-soft);    border: 1px solid var(--red-border); }
+.sr-icon.amber  { background: var(--amber-soft);  border: 1px solid var(--amber-border); }
+.sr-icon.blue   { background: var(--blue-soft);   border: 1px solid var(--blue-border); }
+.sr-icon.green  { background: var(--green-soft);  border: 1px solid var(--green-border); }
+.sr-icon.purple { background: var(--purple-soft); border: 1px solid var(--purple-border); }
+.sr-icon.muted  { background: var(--bg-tertiary); border: 1px solid var(--border-default); }
+
+.sr-meta { flex: 1; min-width: 0; }
+
+.sr-title {
+  font-size: calc(13px * var(--text-scale));
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sr-sub {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sr-arrow { color: var(--text-tertiary); font-size: 14px; }
+
+
+/* ═══ FOOTER ═══ */
+.site-footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-default);
+  padding: 48px 24px;
+  margin-top: 64px;
+}
+
+.footer-accent {
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--amber), var(--blue), var(--green), var(--purple));
+  opacity: 0.7;
+  margin: -48px -24px 32px;
+}
+
+.footer-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.footer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s var(--ease-out);
+}
+
+.footer-btn:hover {
+  background: var(--bg-primary);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.footer-btn svg { width: 15px; height: 15px; }
+
+.footer-divider {
+  height: 1px;
+  background: var(--border-default);
+  margin-bottom: 28px;
+}
+
+.footer-bottom {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.footer-avatar-wrap {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.footer-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-default);
+  object-fit: cover;
+}
+
+.footer-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+.footer-author-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.footer-author-name {
+  font-weight: 600;
+  font-size: calc(15px * var(--text-scale));
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.footer-author-bio {
+  font-size: calc(14px * var(--text-scale));
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 400px;
+  text-align: center;
+}
+
+.footer-follow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 100px;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  text-decoration: none;
+  transition: all 0.2s var(--ease-out);
+}
+
+.footer-follow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -6px hsla(var(--shadow-color) / 0.4);
+}
+
+.footer-follow svg { width: 14px; height: 14px; }
+
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 600px) {
+  nav { padding: 0 16px; }
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+  .footer-avatar-wrap { margin: 0 auto; }
+  .search-modal {
+    margin-top: 0;
+    border-radius: 0;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+  }
+  .search-results { max-height: calc(100vh - 60px); }
+}
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Hub Page Template
+   Homepage layout, hero, sections, pagination
+   ═══════════════════════════════════════ */
+
+.hub-container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 72px 24px 80px;
+}
+
+/* ═══ HERO ═══ */
+.hero {
+  margin-bottom: 72px;
+  position: relative;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: 100px;
+  margin-bottom: 32px;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--amber);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}
+
+/* Carousel */
+.hero-carousel {
+  position: relative;
+  min-height: clamp(80px, 14vw, 130px);
+  margin-bottom: 4px;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0; left: 0;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+  pointer-events: none;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  position: relative;
+  pointer-events: auto;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 7vw, 52px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  max-width: 580px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--amber);
+  font-weight: 500;
+}
+
+.hero-subtitle {
+  font-size: calc(16px * var(--text-scale));
+  color: var(--text-secondary);
+  margin-top: 24px;
+  margin-bottom: 36px;
+  line-height: 1.7;
+  max-width: 480px;
+}
+
+.hero-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 28px;
+}
+
+.hero-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-default);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hero-dot.active {
+  background: var(--amber);
+  width: 20px;
+  border-radius: 3px;
+}
+
+/* ═══ SECTION CARDS ═══ */
+.sections { margin-bottom: 72px; }
+
+.sections-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sections-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+}
+
+.sections-pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sections-pager-info {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.pager-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-out);
+  color: var(--text-secondary);
+}
+
+.pager-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.pager-btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.pager-btn svg { width: 14px; height: 14px; }
+
+.sections-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sec-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s var(--ease-out);
+}
+
+.sec-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 24px -8px hsla(var(--shadow-color) / 0.15);
+  transform: translateY(-1px);
+}
+
+.sec-card.muted {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.sec-card.muted:hover { transform: none; box-shadow: none; }
+
+.sec-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.sec-icon.red    { background: var(--red-soft);    border: 1px solid var(--red-border); }
+.sec-icon.amber  { background: var(--amber-soft);  border: 1px solid var(--amber-border); }
+.sec-icon.blue   { background: var(--blue-soft);   border: 1px solid var(--blue-border); }
+.sec-icon.green  { background: var(--green-soft);  border: 1px solid var(--green-border); }
+.sec-icon.purple { background: var(--purple-soft); border: 1px solid var(--purple-border); }
+
+.sec-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sec-title {
+  font-family: var(--font-display);
+  font-size: calc(16px * var(--text-scale));
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.sec-desc {
+  font-size: calc(13px * var(--text-scale));
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.sec-arrow {
+  color: var(--text-tertiary);
+  font-size: 18px;
+  transition: transform 0.2s var(--ease-out);
+}
+
+.sec-card:hover .sec-arrow {
+  transform: translateX(3px);
+  color: var(--text-secondary);
+}
 
 /* ═══ ABOUT ═══ */
-.about{padding:48px 0;border-top:1px solid var(--b0);margin-bottom:48px}
-.about-h{font-family:var(--fd);font-size:calc(20px*var(--ts));font-weight:500;letter-spacing:-.02em;margin-bottom:12px}
-.about p{font-size:calc(14px*var(--ts));color:var(--t2);line-height:1.7;margin-bottom:12px;max-width:560px}
+.about {
+  margin-bottom: 72px;
+  padding: 32px 0;
+  border-top: 1px solid var(--border-default);
+}
+
+.about-title {
+  font-family: var(--font-display);
+  font-size: calc(22px * var(--text-scale));
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.about p {
+  font-size: calc(15px * var(--text-scale));
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  max-width: 560px;
+}
 
 /* ═══ NEWSLETTER ═══ */
-.nlb{padding:28px;background:var(--bg1);border:1px solid var(--b0);border-radius:16px;text-align:center;margin-bottom:64px}
-.nlb-h{font-family:var(--fd);font-size:calc(18px*var(--ts));font-weight:500;margin-bottom:4px}
-.nlb-sub{font-size:calc(13px*var(--ts));color:var(--t2);margin-bottom:16px}
-.nlf{display:flex;gap:8px;max-width:340px;margin:0 auto}
-.nli{flex:1;padding:10px 14px;background:var(--bg2);border:1px solid var(--b1);border-radius:8px;color:var(--t0);font-family:var(--fb);font-size:14px}.nli:focus{outline:none;border-color:var(--b2)}.nli::placeholder{color:var(--t3)}
-.nlbt{padding:10px 18px;background:var(--t0);color:var(--ti);font-family:var(--fb);font-size:13px;font-weight:600;border:none;border-radius:8px;cursor:pointer;white-space:nowrap}.nlbt:hover{opacity:.85}
-.nlm{font-size:12px;margin-top:8px;display:none}.nlm.ok{display:block;color:var(--grn)}
-
-/* Footer */
-.ft{background:var(--bg1);border-top:1px solid var(--b1);padding:40px 20px}
-.ft-bar{height:3px;background:linear-gradient(90deg,var(--red),var(--amb),var(--blu),var(--grn),var(--pur));opacity:.6;margin:-40px -20px 28px}
-.ft-in{max-width:var(--mw);margin:0 auto;display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:20px}
-.ft-av{width:48px;height:48px;border-radius:10px;background:var(--bg2);border:2px solid var(--b1);object-fit:cover}
-.ft-fb{display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:20px;font-weight:600;color:var(--t3)}
-.ft-nfo{text-align:center}.ft-nm{font-weight:600;font-size:14px;margin-bottom:2px}.ft-bio{font-size:calc(12px*var(--ts));color:var(--t2);line-height:1.4;max-width:360px}
-.ft-f{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 16px;border-radius:100px;background:var(--t0);color:var(--ti);text-decoration:none;transition:all .2s var(--ease)}.ft-f:hover{transform:translateY(-2px)}.ft-f svg{width:12px;height:12px}
-
-@media(max-width:640px){
-  .paths{grid-template-columns:1fr}.cats{grid-template-columns:repeat(3,1fr)}.soon-grid{grid-template-columns:1fr}
-  .nlf{flex-direction:column}.ft-in{grid-template-columns:1fr;justify-items:center;text-align:center;gap:14px}
-  .preview-grid{grid-template-columns:1fr 1fr}
+.nl {
+  padding: 32px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  margin-bottom: 72px;
+  text-align: center;
 }
-@media(max-width:400px){.preview-grid{grid-template-columns:1fr}.cats{grid-template-columns:repeat(2,1fr)}}
-</style>
+
+.nl-title {
+  font-family: var(--font-display);
+  font-size: calc(20px * var(--text-scale));
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.nl-desc {
+  font-size: calc(14px * var(--text-scale));
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.nl-form { display: flex; gap: 8px; max-width: 400px; margin: 0 auto; }
+
+.nl-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.nl-input:focus { outline: none; border-color: var(--border-strong); }
+.nl-input::placeholder { color: var(--text-tertiary); }
+
+.nl-btn {
+  padding: 12px 20px;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+}
+
+.nl-btn:hover { opacity: 0.85; }
+
+.nl-msg { font-size: 13px; margin-top: 10px; display: none; }
+.nl-msg.ok { display: block; color: var(--green); }
+.nl-msg.err { display: block; color: var(--red); }
+
+/* ═══ WHAT'S NEXT ═══ */
+.whats-next {
+  margin-bottom: 48px;
+}
+
+.whats-next-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+}
+
+.whats-next-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.wn-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.wn-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 24px -8px hsla(var(--shadow-color) / 0.15);
+  transform: translateY(-2px);
+}
+
+.wn-card.muted {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.wn-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wn-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.wn-card-icon.red    { background: var(--red-soft);    border: 1px solid var(--red-border); }
+.wn-card-icon.amber  { background: var(--amber-soft);  border: 1px solid var(--amber-border); }
+.wn-card-icon.blue   { background: var(--blue-soft);   border: 1px solid var(--blue-border); }
+.wn-card-icon.green  { background: var(--green-soft);  border: 1px solid var(--green-border); }
+.wn-card-icon.purple { background: var(--purple-soft); border: 1px solid var(--purple-border); }
+
+.wn-card-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.wn-card-title {
+  font-family: var(--font-display);
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.wn-card-desc {
+  font-size: calc(12px * var(--text-scale));
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.wn-card-arrow {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-top: auto;
+  transition: transform 0.2s var(--ease-out);
+}
+
+.wn-card:hover .wn-card-arrow {
+  transform: translateX(3px);
+  color: var(--text-secondary);
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 600px) {
+  .nl-form { flex-direction: column; }
+  .hero-title { font-size: clamp(26px, 8vw, 40px); }
+  .hero-carousel { min-height: clamp(70px, 18vw, 100px); }
+}
+  </style>
 </head>
 <body>
 
-<nav>
-  <a class="nl" href="/"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="12" fill="#1a1a1a"/><path d="M32 12 L56 52 L8 52 Z" fill="none" stroke="#ffb347" stroke-width="3" stroke-linejoin="round"/><text x="32" y="44" fill="#ffb347" font-family="ui-monospace,monospace" font-size="14" font-weight="600" text-anchor="middle">&lt;/&gt;</text></svg><span class="nlt">shipwrecks</span></a>
-  <div class="nr">
-    <button class="nb" onclick="openSearch()"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg></button>
-    <div style="position:relative"><button class="nb" onclick="document.getElementById('tsd').classList.toggle('open')" style="font-family:var(--fb);font-size:13px;font-weight:600">Aa</button><div id="tsd" class="tsd"><button class="to" onclick="setSize('small')">Small</button><button class="to on" onclick="setSize('medium')">Medium</button><button class="to" onclick="setSize('large')">Large</button></div></div>
-    <button class="nb" onclick="toggleTheme()"><svg class="i-s" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg><svg class="i-m" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg></button>
-  </div>
-</nav>
-
-<div class="sov" id="sov" onclick="if(event.target===this)closeSearch()"><div class="sbx"><div class="sbr"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg><input id="sInp" type="text" placeholder="Search mistakes, pages..." autocomplete="off"><span class="esc" onclick="closeSearch()">esc</span></div><div class="srs" id="sRes"></div></div></div>
-
-<div class="mx">
-
-  <!-- Hero — compact, not fullscreen -->
-  <div class="hero">
-    <div class="hero-sub">The production checklist your AI forgot · Updated 2026</div>
-    <h1 class="hero-h" id="hT"></h1>
-    <p class="hero-p">Your AI assistant builds what you ask for and moves on. Shipwrecks is the code review it skipped — 37 mistakes across security, performance, code quality, DevOps, and UX.</p>
-  </div>
-
-  <!-- Two main paths -->
-  <div class="paths">
-    <a class="path" href="/mistakes.html">
-      <div class="path-glow" style="background:var(--blu)"></div>
-      <div class="path-icon">📋</div>
-      <div class="path-h">Read the checklist</div>
-      <p class="path-p">37 production mistakes with severity ratings, explanations, and what to look for in your codebase.</p>
-      <div class="path-cta">Browse all 37 →</div>
-      <div class="path-stats"><span><b>11</b> Security</span><span><b>10</b> Infra</span><span><b>6</b> Data</span><span><b>7</b> Code</span><span><b>3</b> UX</span></div>
+  <!-- Nav -->
+  <nav>
+    <a class="nav-logo" href="/">
+      <svg class="nav-logo-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="12" fill="#1a1a1a"/><path d="M32 12 L56 52 L8 52 Z" fill="none" stroke="#ffb347" stroke-width="3" stroke-linejoin="round"/><text x="32" y="44" fill="#ffb347" font-family="ui-monospace,monospace" font-size="14" font-weight="600" text-anchor="middle">&lt;/&gt;</text></svg>
+      <div class="nav-logo-text">shipwrecks</div>
     </a>
-    <a class="path" href="/score.html">
-      <div class="path-glow" style="background:var(--amb)"></div>
-      <div class="path-icon">🔥</div>
-      <div class="path-h">Audit your codebase</div>
-      <p class="path-p">Take the Shipwreck Score quiz. Pick your stack, answer honestly, get scored and roasted.</p>
-      <div class="path-cta">Start the audit →</div>
-      <div class="path-stats"><span><b>~2</b> min</span><span><b>5</b> categories</span><span><b>7</b> rank tiers</span></div>
-    </a>
-  </div>
-
-  <!-- Category breakdown -->
-  <div class="cats">
-    <a class="cat" href="/mistakes.html#security"><div class="cat-icon">🔒</div><div class="cat-name">Security</div><div class="cat-count">11</div></a>
-    <a class="cat" href="/mistakes.html#infra"><div class="cat-icon">⚡</div><div class="cat-name">Infra</div><div class="cat-count">10</div></a>
-    <a class="cat" href="/mistakes.html#data"><div class="cat-icon">💾</div><div class="cat-name">Data</div><div class="cat-count">6</div></a>
-    <a class="cat" href="/mistakes.html#code"><div class="cat-icon">🧹</div><div class="cat-name">Code</div><div class="cat-count">7</div></a>
-    <a class="cat" href="/mistakes.html#ux"><div class="cat-icon">🎨</div><div class="cat-name">UX</div><div class="cat-count">3</div></a>
-  </div>
-
-  <!-- Sample mistakes — prove the value -->
-  <div class="preview">
-    <div class="preview-h">
-      <span class="preview-title">Sample mistakes</span>
-      <a class="preview-link" href="/mistakes.html">See all 37 →</a>
+    <div class="nav-right">
+      <button class="nav-btn" onclick="openSearch()" aria-label="Search" title="Search">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+      </button>
+      <div class="text-size-toggle">
+        <button class="nav-btn text-sz" onclick="document.getElementById('tsd').classList.toggle('open')" aria-label="Text size">Aa</button>
+        <div class="text-size-dropdown" id="tsd">
+          <button class="ts-opt" onclick="setSize('small')">Small</button>
+          <button class="ts-opt active" onclick="setSize('medium')">Medium</button>
+          <button class="ts-opt" onclick="setSize('large')">Large</button>
+        </div>
+      </div>
+      <button class="nav-btn theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>
+        <svg class="icon-moon" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+      </button>
     </div>
-    <div class="preview-grid">
-      <a class="prev-card" href="/mistakes.html#mistake-3">
-        <div class="prev-top"><span class="prev-cat" style="background:var(--red-s);color:var(--red);border:1px solid var(--red-b)">Security</span><span class="prev-sev" style="background:var(--red-s);color:var(--red);border:1px solid var(--red-b)">💀 Critical</span></div>
-        <div class="prev-title">Hardcoded API keys</div>
-        <div class="prev-desc">Secrets in source code, committed to git.</div>
-      </a>
-      <a class="prev-card" href="/mistakes.html#mistake-12">
-        <div class="prev-top"><span class="prev-cat" style="background:var(--amb-s);color:var(--amb);border:1px solid var(--amb-b)">Infra</span><span class="prev-sev" style="background:var(--amb-s);color:var(--amb);border:1px solid var(--amb-b)">🔥 Major</span></div>
-        <div class="prev-title">No rate limiting</div>
-        <div class="prev-desc">Bots and brute-force attacks welcome.</div>
-      </a>
-      <a class="prev-card" href="/mistakes.html#mistake-26">
-        <div class="prev-top"><span class="prev-cat" style="background:var(--blu-s);color:var(--blu);border:1px solid var(--blu-b)">Data</span><span class="prev-sev" style="background:var(--red-s);color:var(--red);border:1px solid var(--red-b)">💀 Critical</span></div>
-        <div class="prev-title">No database backups</div>
-        <div class="prev-desc">One DROP TABLE and it's gone forever.</div>
-      </a>
-      <a class="prev-card" href="/mistakes.html#mistake-32">
-        <div class="prev-top"><span class="prev-cat" style="background:var(--grn-s);color:var(--grn);border:1px solid var(--grn-b)">Code</span><span class="prev-sev" style="background:var(--amb-s);color:var(--amb);border:1px solid var(--amb-b)">🔥 Major</span></div>
-        <div class="prev-title">No tests at all</div>
-        <div class="prev-desc">Every deploy is a live experiment.</div>
-      </a>
-      <a class="prev-card" href="/mistakes.html#mistake-35">
-        <div class="prev-top"><span class="prev-cat" style="background:var(--blu-s);color:var(--blu);border:1px solid var(--blu-b)">UX</span><span class="prev-sev" style="background:var(--blu-s);color:var(--blu);border:1px solid var(--blu-b)">⚠️ Minor</span></div>
-        <div class="prev-title">No loading states</div>
-        <div class="prev-desc">Click a button... nothing happens.</div>
-      </a>
-      <a class="prev-card" href="/mistakes.html#mistake-10">
-        <div class="prev-top"><span class="prev-cat" style="background:var(--red-s);color:var(--red);border:1px solid var(--red-b)">Security</span><span class="prev-sev" style="background:var(--red-s);color:var(--red);border:1px solid var(--red-b)">💀 Critical</span></div>
-        <div class="prev-title">Secrets committed to git</div>
-        <div class="prev-desc">Your .env is in the repo history forever.</div>
-      </a>
+  </nav>
+
+  <!-- Search overlay -->
+  <div class="search-overlay" id="searchOverlay" onclick="if(event.target===this)closeSearch()">
+    <div class="search-modal">
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+        <input class="search-input" id="searchInput" type="text" placeholder="Search mistakes, pages..." autocomplete="off">
+        <span class="search-esc" onclick="closeSearch()">esc</span>
+      </div>
+      <div class="search-results" id="searchResults"></div>
     </div>
   </div>
 
-  <!-- Coming soon -->
-  <div class="soon">
-    <div class="preview-h"><span class="preview-title">Coming soon</span></div>
-    <div class="soon-grid">
-      <div class="soon-card"><div class="soon-icon">🛠️</div><div class="soon-h">Resources</div><p class="soon-p">How to actually fix each mistake. Guides, tools, and code snippets.</p><span class="soon-tag">In progress</span></div>
-      <div class="soon-card"><div class="soon-icon">💬</div><div class="soon-h">Community</div><p class="soon-p">Submit a mistake. Vote on what's worst. Share your horror stories.</p><span class="soon-tag">Planned</span></div>
+  <!-- Page content -->
+  <div class="hub-container">
+
+    <div class="hero">
+      <div class="hero-badge">The production checklist your AI forgot</div>
+      <div class="hero-carousel" id="heroCarousel"></div>
+      <p class="hero-subtitle">37 critical mistakes vibe coders ship to production. Audit your codebase, score yourself against the list, and learn how to actually fix what's broken.</p>
+      <a class="btn-primary" href="/mistakes.html">Browse all 37 mistakes →</a>
+      <div class="hero-dots" id="heroDots"></div>
     </div>
+
+    <div class="sections">
+      <div class="sections-header">
+        <span class="sections-title">Explore</span>
+        <div class="sections-pager" id="pager"></div>
+      </div>
+      <div class="sections-grid" id="sectionsGrid"></div>
+    </div>
+
+    <div class="about">
+      <h2 class="about-title">What is Shipwrecks?</h2>
+      <p>If you're building with AI — Cursor, Copilot, Claude, ChatGPT — the code gets written fast. But fast doesn't mean safe. Your AI assistant doesn't flag missing auth, skipped error handling, or zero monitoring. It builds what you ask for and moves on.</p>
+      <p>Shipwrecks is the checklist for the gaps AI leaves behind. 37 mistakes across security, performance, code quality, DevOps, and UX that actually break production apps. Not theoretical. Not edge cases. The stuff that wakes you up at 3am.</p>
+    </div>
+
+    <div class="nl">
+      <div class="nl-title">Stay in the loop</div>
+      <div class="nl-desc">New mistakes, horror stories, and fixes. No spam, no fluff.</div>
+      <form class="nl-form" id="nlForm" onsubmit="return handleNL(event)">
+        <input class="nl-input" id="nlEmail" type="email" placeholder="you@email.com" required>
+        <button class="nl-btn" type="submit">Subscribe</button>
+      </form>
+      <div class="nl-msg" id="nlMsg"></div>
+    </div>
+
   </div>
 
-  <!-- About -->
-  <div class="about">
-    <h2 class="about-h">What is this?</h2>
-    <p>If you're building with AI — Cursor, Copilot, Claude, ChatGPT — the code gets written fast. But fast doesn't mean safe. Your AI assistant doesn't flag missing auth, skipped error handling, or zero monitoring.</p>
-    <p>Shipwrecks is the checklist for the gaps AI leaves behind. Not theoretical. Not edge cases. The stuff that wakes you up at 3am.</p>
-  </div>
+  <!-- Footer (hardcoded, not JS-rendered) -->
+  <footer class="site-footer">
+    <div class="footer-accent"></div>
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <div class="footer-avatar-wrap">
+          <img src="/avatar.jpg" alt="TRIP" class="footer-avatar" onerror="this.parentElement.innerHTML='<div class=\'footer-avatar footer-avatar-fallback\'>T</div>'">
+        </div>
+        <div class="footer-author-info">
+          <span class="footer-author-name">TRIP</span>
+          <p class="footer-author-bio">Designer &amp; developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don't make the mistakes above.</p>
+        </div>
+        <a href="https://twitter.com/WLXAJ" class="footer-follow" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Follow
+        </a>
+      </div>
+    </div>
+  </footer>
 
-  <!-- Newsletter -->
-  <div class="nlb"><div class="nlb-h">Stay in the loop</div><div class="nlb-sub">New mistakes, horror stories, and fixes. No spam.</div><form class="nlf" onsubmit="return handleNL(event)"><input class="nli" id="nlE" type="email" placeholder="you@email.com" required><button class="nlbt" type="submit">Subscribe</button></form><div class="nlm" id="nlM"></div></div>
+  <script>
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Content Registry
+   Single source of truth for all pages.
+   Adding a new page = adding one entry.
+   ═══════════════════════════════════════ */
 
-</div>
+const SITE = {
+  name: 'Shipwrecks',
+  url: 'https://shipwrecksbyai.vercel.app',
+  author: {
+    name: 'TRIP',
+    handle: '@WLXAJ',
+    bio: 'Designer & developer building at the intersection of fintech, crypto, and taste. Currently shipping products that don\'t make the mistakes above.',
+    avatar: '/avatar.jpg',
+    twitter: 'https://twitter.com/WLXAJ'
+  }
+};
 
-<footer class="ft"><div class="ft-bar"></div><div class="ft-in"><div style="width:48px;height:48px"><img src="/avatar.jpg" alt="TRIP" class="ft-av" onerror="this.outerHTML='<div class=\'ft-av ft-fb\'>T</div>'"></div><div class="ft-nfo"><div class="ft-nm">TRIP</div><div class="ft-bio">Designer &amp; developer at the intersection of fintech, crypto, and taste.</div></div><a href="https://twitter.com/WLXAJ" class="ft-f" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Follow</a></div></footer>
+/* Tag types with colors */
+const TAG_TYPES = {
+  tool:      { label: 'Tool',      icon: '🔧', color: 'amber'  },
+  read:      { label: 'Read',      icon: '📖', color: 'blue'   },
+  community: { label: 'Community', icon: '💬', color: 'green'  },
+  guide:     { label: 'Guide',     icon: '📚', color: 'purple' },
+};
 
-<script>
-function toggleTheme(){var t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('sw-theme',t)}catch(e){}}
-function setSize(s){document.documentElement.dataset.textSize=s;document.querySelectorAll('.to').forEach(function(b){b.classList.toggle('on',b.textContent.toLowerCase()===s)});document.getElementById('tsd').classList.remove('open');try{localStorage.setItem('sw-size',s)}catch(e){}}
-(function(){try{var t=localStorage.getItem('sw-theme');if(t)document.documentElement.dataset.theme=t;var s=localStorage.getItem('sw-size');if(s)setSize(s)}catch(e){}})();
-document.addEventListener('click',function(e){if(!e.target.closest('#tsd')&&!e.target.closest('[onclick*="tsd"]'))document.getElementById('tsd').classList.remove('open')});
+/* Content pages — order matters for pagination */
+const PAGES = [
+  {
+    id: 'mistakes',
+    title: '37 Mistakes',
+    desc: 'Security, performance, code quality, DevOps, and UX — the full production checklist.',
+    type: 'read',
+    url: '/mistakes.html',
+    status: 'live',
+    icon: '📋',
+    added: '2025-06-01'
+  },
+  {
+    id: 'score',
+    title: 'Shipwreck Score',
+    desc: 'Quiz your codebase. Get scored, get roasted, share the wreckage.',
+    type: 'tool',
+    url: '/score.html',
+    status: 'live',
+    icon: '🔥',
+    added: '2025-06-15'
+  },
+  {
+    id: 'resources',
+    title: 'Resources',
+    desc: 'How to actually fix each mistake. Guides, tools, and code snippets.',
+    type: 'guide',
+    url: '#',
+    status: 'soon',
+    icon: '🛠️',
+    added: '2025-07-01'
+  },
+  {
+    id: 'community',
+    title: 'Community',
+    desc: 'Submit a mistake. Vote on what\'s worst. Share your horror stories.',
+    type: 'community',
+    url: '#',
+    status: 'soon',
+    icon: '💬',
+    added: '2025-07-01'
+  }
+];
 
-var SL=['The code review your <em>AI never gave you</em>','Ship fast, <em>wreck nothing</em>','37 ways to <em>sink your production app</em>','Vibe coding is fun until <em>production catches fire</em>'];
-document.getElementById('hT').innerHTML=SL[new Date().getDate()%SL.length];
+/* Search index — mistakes data for the search overlay */
+const MISTAKES_INDEX = [
+  { id: 1,  title: 'Auth tokens in localStorage', cat: 'Security', url: '/mistakes.html#mistake-1' },
+  { id: 2,  title: 'No input sanitisation', cat: 'Security', url: '/mistakes.html#mistake-2' },
+  { id: 3,  title: 'Hardcoded API keys', cat: 'Security', url: '/mistakes.html#mistake-3' },
+  { id: 4,  title: 'No Stripe webhook verification', cat: 'Security', url: '/mistakes.html#mistake-4' },
+  { id: 5,  title: 'Sessions that never expire', cat: 'Security', url: '/mistakes.html#mistake-5' },
+  { id: 6,  title: 'Password reset links don\'t expire', cat: 'Security', url: '/mistakes.html#mistake-6' },
+  { id: 7,  title: 'No CORS policy', cat: 'Security', url: '/mistakes.html#mistake-7' },
+  { id: 8,  title: 'Admin routes with no role checks', cat: 'Security', url: '/mistakes.html#mistake-8' },
+  { id: 9,  title: 'No CSRF protection', cat: 'Security', url: '/mistakes.html#mistake-9' },
+  { id: 10, title: 'Secrets committed to git', cat: 'Security', url: '/mistakes.html#mistake-10' },
+  { id: 11, title: 'No Content Security Policy', cat: 'Security', url: '/mistakes.html#mistake-11' },
+  { id: 12, title: 'No rate limiting', cat: 'Infra', url: '/mistakes.html#mistake-12' },
+  { id: 13, title: 'No database connection pooling', cat: 'Infra', url: '/mistakes.html#mistake-13' },
+  { id: 14, title: 'Images uploaded to server', cat: 'Infra', url: '/mistakes.html#mistake-14' },
+  { id: 15, title: 'Emails sent synchronously', cat: 'Infra', url: '/mistakes.html#mistake-15' },
+  { id: 16, title: 'No health check endpoint', cat: 'Infra', url: '/mistakes.html#mistake-16' },
+  { id: 17, title: 'No logging in production', cat: 'Infra', url: '/mistakes.html#mistake-17' },
+  { id: 18, title: 'No env variable validation', cat: 'Infra', url: '/mistakes.html#mistake-18' },
+  { id: 19, title: 'No graceful shutdown', cat: 'Infra', url: '/mistakes.html#mistake-19' },
+  { id: 20, title: 'No retry logic with backoff', cat: 'Infra', url: '/mistakes.html#mistake-20' },
+  { id: 21, title: 'No request timeout', cat: 'Infra', url: '/mistakes.html#mistake-21' },
+  { id: 22, title: 'No database indexing', cat: 'Data', url: '/mistakes.html#mistake-22' },
+  { id: 23, title: 'No database migrations', cat: 'Data', url: '/mistakes.html#mistake-23' },
+  { id: 24, title: 'No soft deletes', cat: 'Data', url: '/mistakes.html#mistake-24' },
+  { id: 25, title: 'No pagination on queries', cat: 'Data', url: '/mistakes.html#mistake-25' },
+  { id: 26, title: 'No database backups', cat: 'Data', url: '/mistakes.html#mistake-26' },
+  { id: 27, title: 'User data not encrypted at rest', cat: 'Data', url: '/mistakes.html#mistake-27' },
+  { id: 28, title: 'No lint or format enforcement', cat: 'Code', url: '/mistakes.html#mistake-28' },
+  { id: 29, title: 'No error boundaries', cat: 'Code', url: '/mistakes.html#mistake-29' },
+  { id: 30, title: 'Console.log in production', cat: 'Code', url: '/mistakes.html#mistake-30' },
+  { id: 31, title: 'No TypeScript or schema validation', cat: 'Code', url: '/mistakes.html#mistake-31' },
+  { id: 32, title: 'No tests at all', cat: 'Code', url: '/mistakes.html#mistake-32' },
+  { id: 33, title: 'Git history is one commit', cat: 'Code', url: '/mistakes.html#mistake-33' },
+  { id: 34, title: 'Dead code everywhere', cat: 'Code', url: '/mistakes.html#mistake-34' },
+  { id: 35, title: 'No loading or empty states', cat: 'UX', url: '/mistakes.html#mistake-35' },
+  { id: 36, title: 'No mobile responsiveness', cat: 'UX', url: '/mistakes.html#mistake-36' },
+  { id: 37, title: 'No error messages for users', cat: 'UX', url: '/mistakes.html#mistake-37' },
+];
 
-var SD=[{t:'37 Mistakes',d:'Full production checklist',u:'/mistakes.html',i:'📋'},{t:'Shipwreck Score',d:'Audit your codebase',u:'/score.html',i:'🔥'},{t:'Hardcoded API keys',u:'/mistakes.html#mistake-3',i:'🔒',c:'Security'},{t:'No rate limiting',u:'/mistakes.html#mistake-12',i:'⚡',c:'Infra'},{t:'No database backups',u:'/mistakes.html#mistake-26',i:'💾',c:'Data'},{t:'No tests at all',u:'/mistakes.html#mistake-32',i:'🧹',c:'Code'},{t:'No loading states',u:'/mistakes.html#mistake-35',i:'🎨',c:'UX'}];
-function openSearch(){document.getElementById('sov').classList.add('open');var i=document.getElementById('sInp');i.value='';i.focus();sr('')}
-function closeSearch(){document.getElementById('sov').classList.remove('open')}
-document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'&&document.getElementById('sov').classList.contains('open'))closeSearch()});
-document.getElementById('sInp').addEventListener('input',function(e){sr(e.target.value)});
-function sr(q){var r=document.getElementById('sRes');q=q.toLowerCase().trim();if(!q){r.innerHTML='<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Type to search...</div>';return}var m=SD.filter(function(d){return(d.t+' '+(d.d||'')+' '+(d.c||'')).toLowerCase().indexOf(q)!==-1});if(!m.length){r.innerHTML='<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">No results</div>';return}var h='';m.forEach(function(d){h+='<a href="'+d.u+'" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;text-decoration:none;color:inherit;transition:background .1s" onmouseover="this.style.background=\'var(--bg3)\'" onmouseout="this.style.background=\'none\'"><span style="font-size:14px">'+d.i+'</span><div style="flex:1"><div style="font-size:13px;font-weight:500">'+d.t+'</div>'+(d.c?'<div style="font-size:10px;color:var(--t3)">'+d.c+'</div>':'')+'</div><span style="color:var(--t3)">\u2192</span></a>'});r.innerHTML=h}
-function handleNL(e){e.preventDefault();document.getElementById('nlM').className='nlm ok';document.getElementById('nlM').textContent="Thanks! We'll be in touch.";document.getElementById('nlE').value='';return false}
-</script>
+/* Category → color mapping for search icons */
+const CAT_COLORS = {
+  'Security': 'red',
+  'Infra':    'amber',
+  'Data':     'blue',
+  'Code':     'green',
+  'UX':       'purple'
+};
+
+/* Category → icon mapping */
+const CAT_ICONS = {
+  'Security': '🔒',
+  'Infra':    '⚡',
+  'Data':     '💾',
+  'Code':     '🧹',
+  'UX':       '🎨'
+};
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Theme & Text Size
+   ═══════════════════════════════════════ */
+
+function toggleTheme() {
+  const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem('sw-theme', t); } catch(e) {}
+}
+
+function setSize(s) {
+  document.documentElement.dataset.textSize = s;
+  document.querySelectorAll('.ts-opt').forEach(b =>
+    b.classList.toggle('active', b.textContent.toLowerCase() === s)
+  );
+  const dd = document.getElementById('tsd');
+  if (dd) dd.classList.remove('open');
+  try { localStorage.setItem('sw-size', s); } catch(e) {}
+}
+
+/* Restore on load */
+(function() {
+  try {
+    const t = localStorage.getItem('sw-theme');
+    if (t) document.documentElement.dataset.theme = t;
+    const s = localStorage.getItem('sw-size');
+    if (s) setSize(s);
+  } catch(e) {}
+})();
+
+/* Close text size dropdown on outside click */
+document.addEventListener('click', e => {
+  if (!e.target.closest('.text-size-toggle')) {
+    const dd = document.getElementById('tsd');
+    if (dd) dd.classList.remove('open');
+  }
+});
+/* ═══════════════════════════════════════
+   SHIPWRECKS — Search (Cmd+K overlay)
+   Reads from registry.js (PAGES, MISTAKES_INDEX)
+   ═══════════════════════════════════════ */
+
+let _searchFocusIdx = -1;
+
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('open');
+  const inp = document.getElementById('searchInput');
+  inp.value = '';
+  inp.focus();
+  renderSearch('');
+  _searchFocusIdx = -1;
+}
+
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+
+/* Keyboard: Cmd+K to open, Esc to close, arrows + enter to navigate */
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openSearch();
+    return;
+  }
+  if (e.key === 'Escape' && document.getElementById('searchOverlay').classList.contains('open')) {
+    closeSearch();
+    return;
+  }
+  if (!document.getElementById('searchOverlay').classList.contains('open')) return;
+
+  const items = document.querySelectorAll('.sr-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _searchFocusIdx = Math.min(_searchFocusIdx + 1, items.length - 1);
+    _updateSearchFocus(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _searchFocusIdx = Math.max(_searchFocusIdx - 1, 0);
+    _updateSearchFocus(items);
+  } else if (e.key === 'Enter' && _searchFocusIdx >= 0 && items[_searchFocusIdx]) {
+    items[_searchFocusIdx].click();
+  }
+});
+
+function _updateSearchFocus(items) {
+  items.forEach((it, i) => it.classList.toggle('focused', i === _searchFocusIdx));
+  if (items[_searchFocusIdx]) items[_searchFocusIdx].scrollIntoView({ block: 'nearest' });
+}
+
+/* Input listener — bind after DOM is ready (scripts at bottom of body) */
+const _searchInp = document.getElementById('searchInput');
+if (_searchInp) _searchInp.addEventListener('input', e => renderSearch(e.target.value));
+
+function renderSearch(q) {
+  const r = document.getElementById('searchResults');
+  if (!r) return;
+  q = q.toLowerCase().trim();
+
+  if (!q) {
+    r.innerHTML = '<div class="search-empty">Type to search pages, mistakes...</div>';
+    _searchFocusIdx = -1;
+    return;
+  }
+
+  /* Search pages from registry */
+  const pageMatches = PAGES.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    p.desc.toLowerCase().includes(q) ||
+    p.type.toLowerCase().includes(q)
+  );
+
+  /* Search mistakes from registry */
+  const mistakeMatches = MISTAKES_INDEX.filter(m =>
+    m.title.toLowerCase().includes(q) ||
+    m.cat.toLowerCase().includes(q)
+  );
+
+  if (!pageMatches.length && !mistakeMatches.length) {
+    r.innerHTML = '<div class="search-empty">No results found</div>';
+    _searchFocusIdx = -1;
+    return;
+  }
+
+  let h = '';
+
+  if (pageMatches.length) {
+    h += '<div class="sr-group">Pages</div>';
+    pageMatches.forEach(p => {
+      const tag = TAG_TYPES[p.type] || {};
+      const colorCls = tag.color || 'muted';
+      h += `<a class="sr-item" href="${p.url}">
+        <div class="sr-icon ${colorCls}">${p.icon}</div>
+        <div class="sr-meta">
+          <div class="sr-title">${_hl(p.title, q)}</div>
+          <div class="sr-sub">${tag.label || p.type} · ${p.desc}</div>
+        </div>
+        <span class="sr-arrow">→</span>
+      </a>`;
+    });
+  }
+
+  if (mistakeMatches.length) {
+    h += '<div class="sr-group">Mistakes</div>';
+    mistakeMatches.forEach(m => {
+      const colorCls = CAT_COLORS[m.cat] || 'muted';
+      const icon = CAT_ICONS[m.cat] || '📋';
+      h += `<a class="sr-item" href="${m.url}">
+        <div class="sr-icon ${colorCls}">${icon}</div>
+        <div class="sr-meta">
+          <div class="sr-title">${_hl(m.title, q)}</div>
+          <div class="sr-sub">${m.cat}</div>
+        </div>
+        <span class="sr-arrow">→</span>
+      </a>`;
+    });
+  }
+
+  r.innerHTML = h;
+  _searchFocusIdx = -1;
+}
+
+/* Highlight matching text */
+function _hl(text, q) {
+  if (!q) return text;
+  const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return text.replace(re, '<strong style="color:var(--text-primary)">$1</strong>');
+}
+
+/* ═══ PAGE: HOMEPAGE ═══ */
+var PER_PAGE = 6;
+var currentPage = 0;
+
+var SLIDES = [
+  { title: 'The code review your <em>AI never gave you</em>' },
+  { title: 'Your codebase has <em>secrets it\'s not telling you</em>' },
+  { title: 'Ship fast, <em>wreck nothing</em>' },
+  { title: '37 ways to <em>sink your production app</em>' },
+  { title: 'Vibe coding is fun until <em>production catches fire</em>' }
+];
+
+function initCarousel() {
+  var c = document.getElementById('heroCarousel');
+  var d = document.getElementById('heroDots');
+  for (var i = 0; i < SLIDES.length; i++) {
+    var div = document.createElement('div');
+    div.className = 'hero-slide' + (i === 0 ? ' active' : '');
+    div.innerHTML = '<h1 class="hero-title">' + SLIDES[i].title + '</h1>';
+    c.appendChild(div);
+
+    var dot = document.createElement('div');
+    dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('onclick', 'goSlide(' + i + ')');
+    d.appendChild(dot);
+  }
+  goSlide(new Date().getDate() % SLIDES.length);
+}
+
+function goSlide(i) {
+  var slides = document.querySelectorAll('.hero-slide');
+  var dots = document.querySelectorAll('.hero-dot');
+  for (var j = 0; j < slides.length; j++) {
+    slides[j].classList.toggle('active', j === i);
+    dots[j].classList.toggle('active', j === i);
+  }
+}
+
+function renderSections() {
+  var grid = document.getElementById('sectionsGrid');
+  var pager = document.getElementById('pager');
+  var totalPages = Math.ceil(PAGES.length / PER_PAGE);
+  var start = currentPage * PER_PAGE;
+  var pageItems = PAGES.slice(start, start + PER_PAGE);
+  var h = '';
+
+  for (var i = 0; i < pageItems.length; i++) {
+    var p = pageItems[i];
+    var tag = TAG_TYPES[p.type] || {};
+    var isMuted = p.status === 'soon';
+    var tagEl = isMuted
+      ? '<span class="pill badge-muted">Coming soon</span>'
+      : '<span class="pill badge-' + tag.color + '">' + tag.icon + ' ' + tag.label + '</span>';
+    var el = isMuted ? 'div' : 'a';
+    var href = isMuted ? '' : ' href="' + p.url + '"';
+
+    h += '<' + el + ' class="sec-card' + (isMuted ? ' muted' : '') + '"' + href + '>'
+      + '<div class="sec-icon ' + tag.color + '">' + p.icon + '</div>'
+      + '<div class="sec-meta"><div class="sec-title">' + p.title + '</div><div class="sec-desc">' + p.desc + '</div></div>'
+      + tagEl
+      + '<span class="sec-arrow">\u2192</span>'
+      + '</' + el + '>';
+  }
+  grid.innerHTML = h;
+
+  if (totalPages <= 1) {
+    pager.innerHTML = '';
+  } else {
+    var endIdx = Math.min(start + PER_PAGE, PAGES.length);
+    pager.innerHTML = '<button class="pager-btn" onclick="prevPage()"' + (currentPage === 0 ? ' disabled' : '') + '><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></button>'
+      + '<span class="sections-pager-info">' + (start+1) + '\u2013' + endIdx + ' of ' + PAGES.length + '</span>'
+      + '<button class="pager-btn" onclick="nextPage()"' + (currentPage >= totalPages-1 ? ' disabled' : '') + '><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></button>';
+  }
+}
+
+function prevPage() { if (currentPage > 0) { currentPage--; renderSections(); } }
+function nextPage() { if (currentPage < Math.ceil(PAGES.length / PER_PAGE) - 1) { currentPage++; renderSections(); } }
+
+function handleNL(e) {
+  e.preventDefault();
+  var email = document.getElementById('nlEmail').value;
+  var msg = document.getElementById('nlMsg');
+  msg.className = 'nl-msg ok';
+  msg.textContent = "Thanks! We'll be in touch when we launch the newsletter.";
+  msg.style.display = 'block';
+  document.getElementById('nlEmail').value = '';
+  try { var subs = JSON.parse(localStorage.getItem('sw-nl-subs') || '[]'); subs.push({email:email,ts:Date.now()}); localStorage.setItem('sw-nl-subs', JSON.stringify(subs)); } catch(ex) {}
+  return false;
+}
+
+/**
+ * renderWhatsNext — shows contextual navigation cards.
+ * currentPageId: the id of the current page (from PAGES registry)
+ * maxCards: how many to show (default 3)
+ * Excludes the current page, prioritizes live pages, shows "coming soon" muted.
+ */
+function renderWhatsNext(currentPageId, maxCards) {
+  maxCards = maxCards || 3;
+  var el = document.getElementById('whatsNext');
+  if (!el) return;
+
+  // Filter out current page, prioritize live, then soon
+  var live = [];
+  var soon = [];
+  for (var i = 0; i < PAGES.length; i++) {
+    if (PAGES[i].id === currentPageId) continue;
+    if (PAGES[i].status === 'live') live.push(PAGES[i]);
+    else soon.push(PAGES[i]);
+  }
+
+  // Take up to maxCards, filling with live first then soon
+  var cards = live.concat(soon).slice(0, maxCards);
+  if (!cards.length) return;
+
+  var h = '<div class="whats-next-title">What\'s next</div><div class="whats-next-grid">';
+
+  for (var j = 0; j < cards.length; j++) {
+    var p = cards[j];
+    var tag = TAG_TYPES[p.type] || {};
+    var isMuted = p.status === 'soon';
+    var tagClass = isMuted ? 'badge-muted' : 'badge-' + tag.color;
+    var tagLabel = isMuted ? 'Coming soon' : tag.icon + ' ' + tag.label;
+    var elTag = isMuted ? 'div' : 'a';
+    var href = isMuted ? '' : ' href="' + p.url + '"';
+
+    h += '<' + elTag + ' class="wn-card' + (isMuted ? ' muted' : '') + '"' + href + '>'
+      + '<div class="wn-card-top">'
+      + '<div class="wn-card-icon ' + (tag.color || '') + '">' + p.icon + '</div>'
+      + '<span class="wn-card-tag pill ' + tagClass + '">' + tagLabel + '</span>'
+      + '</div>'
+      + '<div class="wn-card-title">' + p.title + '</div>'
+      + '<div class="wn-card-desc">' + p.desc + '</div>'
+      + '<div class="wn-card-arrow">\u2192</div>'
+      + '</' + elTag + '>';
+  }
+
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+/* INIT */
+initCarousel();
+renderSections();
+  </script>
 </body>
 </html>
