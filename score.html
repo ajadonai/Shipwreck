@@ -495,8 +495,8 @@ var cp=document.getElementById('cp-'+c.id);if(cp)cp.textContent=answered+' answe
 function finish(){activeQ.forEach(function(m){if(!ans[m.id])ans[m.id]='safe'});document.querySelector('.sub-bar').classList.remove('vis');showResults()}
 
 function showResults(){go('s-res');
-var guilty=[],safe=0,skipped=0,maxS=0,lost=0;
-CATS.forEach(function(c){c.items.forEach(function(m){if(ans[m.id]==='guilty'){guilty.push(m);lost+=SV[m.s].p}if(ans[m.id]==='skip')skipped++;if(ans[m.id]!=='skip')maxS+=SV[m.s].p})});
+var guilty=[],safe=0,skipped=0,maxS=0,lost=0,tested=0;
+CATS.forEach(function(c){c.items.forEach(function(m){if(ans[m.id]==='guilty'){guilty.push(m);lost+=SV[m.s].p}if(ans[m.id]==='skip')skipped++;if(ans[m.id]!=='skip'){maxS+=SV[m.s].p;tested++}})});
 var score=maxS-lost,pct=maxS>0?Math.round((score/maxS)*100):0,rank=getRank(pct);
 
 /* Category breakdown */
@@ -511,14 +511,14 @@ var gH='';guilty.sort(function(a,b){return b.s-a.s}).forEach(function(m){var sv=
 gH+='<a class="gi" href="/mistakes#mistake-'+m.id+'" target="_blank"><span class="gi-sev">'+sv.i+'</span><span class="gi-name">'+m.t+'</span><span class="gi-pts" style="color:'+COL[cat.color]+'">-'+sv.p+'</span><span class="gi-link">↗</span></a>'});
 
 var pLbl=Array.from(selP).map(function(id){var p=PT.find(function(x){return x.id===id});return p?p.t:''}).filter(Boolean).join(' + ');
-var twt=encodeURIComponent('My Shipwreck Score: '+pct+'%\n'+rank.emoji+' '+rank.title+'\n'+guilty.length+' production mistake'+(guilty.length!==1?'s':'')+'\nhttps://shipwrecksbyai.vercel.app/score');
+var twt=encodeURIComponent('My Shipwreck Score: '+pct+'% ('+tested+' checks)\n'+rank.emoji+' '+rank.title+'\n'+guilty.length+' production mistake'+(guilty.length!==1?'s':'')+' · '+pLbl+'\nhttps://shipwrecksbyai.vercel.app/score');
 
 document.getElementById('resContent').innerHTML=
 '<div class="res-hero"><div class="res-glow" style="background:'+rank.glow+';opacity:.15"></div>'
 +'<div class="res-rank" style="background:'+rank.bg+';color:'+rank.bc+'">'+rank.emoji+' '+rank.label+'</div>'
 +'<div class="res-num" id="sNum" style="color:'+rank.sc+'">0</div>'
 +'<div class="res-pct">%</div>'
-+'<div class="res-of">'+guilty.length+' mistake'+(guilty.length!==1?'s':'')+' · '+pLbl+(skipped?' · '+skipped+' skipped':'')+'</div>'
++'<div class="res-of">'+tested+' checks · '+guilty.length+' mistake'+(guilty.length!==1?'s':'')+' · '+pLbl+(skipped?' · '+skipped+' skipped':'')+'</div>'
 +'<h2 class="res-title">'+rank.title+'</h2>'
 +'<p class="res-roast">'+rank.roast+'</p></div>'
 +'<div class="brk"><div class="brk-t">Category breakdown</div>'+brkH+'</div>'
@@ -540,7 +540,7 @@ window._scoreCardHTML='<div id="scoreShareCard" style="width:100%;aspect-ratio:1
 +'<div style="position:relative;z-index:1">'
 +'<div style="display:inline-flex;font-family:monospace;font-size:7px;text-transform:uppercase;letter-spacing:.08em;padding:3px 9px;border-radius:100px;margin-bottom:8px;background:rgba(255,179,71,.1);color:#ffb347;border:1px solid rgba(255,179,71,.2)">🔧 Shipwreck Score</div>'
 +'<div style="font-family:Fraunces,serif;font-size:56px;font-weight:300;line-height:.85;letter-spacing:-.04em;margin-bottom:3px;color:'+rank.sc+'">'+pct+'<span style="font-size:24px;font-weight:400;opacity:.5">%</span></div>'
-+'<div style="font-family:monospace;font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">'+guilty.length+' mistakes · '+pLbl+'</div>'
++'<div style="font-family:monospace;font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">'+tested+' checks · '+guilty.length+' mistakes · '+pLbl+'</div>'
 +'<div style="font-family:Fraunces,serif;font-size:15px;font-weight:500;margin-bottom:2px;color:'+rank.sc+'">'+rank.emoji+' '+rank.title+'</div>'
 +'<div style="font-size:11px;color:#888">'+rank.roast+'</div>'
 +'<div style="display:flex;gap:3px;margin-top:8px">'+barsH+'</div>'
@@ -552,7 +552,7 @@ window._scoreTwt=twt;
 
 animS(pct);setTimeout(function(){document.querySelectorAll('.brk-fill[data-w]').forEach(function(b){b.style.width=b.dataset.w})},400);
 document.getElementById('wnBlock').style.display='block';renderWN();
-window._cpText=rank.emoji+' '+rank.title+': '+pct+'%\n'+guilty.length+' production mistakes\nhttps://shipwrecksbyai.vercel.app/score'}
+window._cpText=rank.emoji+' '+rank.title+': '+pct+'% ('+tested+' checks)\n'+guilty.length+' production mistakes · '+pLbl+'\nhttps://shipwrecksbyai.vercel.app/score'}
 
 function animS(t){var el=document.getElementById('sNum');if(!el)return;var st=performance.now();(function tk(n){var p=Math.min((n-st)/1200,1);el.textContent=Math.round((1-Math.pow(1-p,3))*t);if(p<1)requestAnimationFrame(tk)})(st)}
 function cpRes(){navigator.clipboard.writeText(window._cpText).then(function(){var b=document.querySelector('.sb-c');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy'},2000)})}
